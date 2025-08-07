@@ -55,6 +55,6 @@ Module: IMY 220
 
 ## 📎 Repo Link
 
-> [https://github.com/YOUR_USERNAME/imy220-project](https://github.com/Jo-Reardon/imy220-project)
+> [https://github.com/Jo-Reardon/imy220-project](https://github.com/Jo-Reardon/imy220-project)
 ---
 
