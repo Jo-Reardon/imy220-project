@@ -1,6 +1,15 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { connectDB } from './config/database.js';
+import User from './models/User.js';
+import Project from './models/Project.js';
+import Activity from './models/Activity.js';
+import CheckIn from './models/CheckIn.js';
+import { createAuthRoutes } from './routes/authRoutes.js';
+import { createUserRoutes } from './routes/userRoutes.js';
+import { createProjectRoutes } from './routes/projectRoutes.js';
+import { createActivityRoutes } from './routes/activityRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,64 +18,59 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 
-// Dummy data
-const dummyUser = {
-    username: 'YounglingSlayer66',
-    name: 'Jo Reardon',
-    email: 'test@test.com',
-    avatar: 'https://via.placeholder.com/150',
-    bio: "I don't push to production, I teleport."
-};
+// CORS middleware for development
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    next();
+});
 
-const dummyActivities = [
-    { user: 'Alice', action: 'checked in to "Nebulabort"', project: 'Refactor', time: '2h ago' },
-    { user: 'Bob', action: 'created project', project: 'Starfield Sorter', time: '5h ago' }
-];
+// Initialize database and models
+let db;
+let userModel;
+let projectModel;
+let activityModel;
+let checkInModel;
 
-const dummyProjects = [
-    {
-        _id: '1',
-        name: 'Starfield Sorter',
-        description: 'A sorting algorithm',
-        languages: ['CSS', 'DataStructures', 'C08212'],
-        lastUpdated: '3 days ago',
-        checkedOut: false
+async function initializeApp() {
+    try {
+        db = await connectDB();
+        
+        // Initialize models
+        userModel = new User(db);
+        projectModel = new Project(db);
+        activityModel = new Activity(db);
+        checkInModel = new CheckIn(db);
+
+        // Setup routes
+        app.use('/api/auth', createAuthRoutes(userModel));
+        app.use('/api/users', createUserRoutes(userModel));
+        app.use('/api/projects', createProjectRoutes(projectModel, activityModel, checkInModel));
+        app.use('/api/activity', createActivityRoutes(activityModel, userModel));
+
+        // Health check
+        app.get('/api/health', (req, res) => {
+            res.json({ status: 'ok', message: 'CodeVerse API is running' });
+        });
+
+        // Serve index.html for all other routes (SPA)
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
+        });
+
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+            console.log('🚀 CodeVerse server running at http://localhost:' + PORT);
+            console.log('May the code be with you...');
+        });
+    } catch (error) {
+        console.error('Failed to initialize app:', error);
+        process.exit(1);
     }
-];
+}
 
-// Auth routes
-app.post('/api/auth/login', (req, res) => {
-    res.json({ success: true, user: dummyUser });
-});
-
-app.post('/api/auth/register', (req, res) => {
-    res.json({ success: true, user: dummyUser });
-});
-
-// Activity routes
-app.get('/api/activity', (req, res) => {
-    res.json(dummyActivities);
-});
-
-// Project routes
-app.get('/api/projects/featured', (req, res) => {
-    res.json(dummyProjects);
-});
-
-// User routes
-app.get('/api/users/:username', (req, res) => {
-    res.json({ user: dummyUser, projects: dummyProjects });
-});
-
-// Serve index.html for all other routes (SPA)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
-});
-
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 CodeVerse server running at http://localhost:${PORT}`);
-    console.log('May the code be with you...');
-});
+initializeApp();
