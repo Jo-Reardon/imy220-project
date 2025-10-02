@@ -1,0 +1,7 @@
+node_modules/
+dist/
+frontend/public/bundle.js
+frontend/public/bundle.js.LICENSE.txt
+.DS_Store
+*.log
+.env
