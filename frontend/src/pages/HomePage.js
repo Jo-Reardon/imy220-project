@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import ActivityFeed from '../components/ActivityFeed';
-import ProjectCard from '../components/ProjectCard';
+import Header from '../components/Header.js';
+import ActivityFeed from '../components/ActivityFeed.js';
+import ProjectCard from '../components/ProjectCard.js';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faFolder, faUsers, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';

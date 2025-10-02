@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Starfield from './components/Starfield';
-import SplashPage from './pages/SplashPage';
-import LoginForm from './components/forms/LoginForm';
-import HomePage from './pages/HomePage';
-import ProfilePage from './pages/ProfilePage';
+import Starfield from './components/Starfield.js';
+import SplashPage from './pages/SplashPage.js';
+import LoginForm from './components/forms/LoginForm.js';
+import HomePage from './pages/HomePage.js';
+import ProfilePage from './pages/ProfilePage.js';
 
 function App() {
     const isLoggedIn = localStorage.getItem('user');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Header from '../components/Header';
-import ProjectCard from '../components/ProjectCard';
+import Header from '../components/Header.js';
+import ProjectCard from '../components/ProjectCard.js';
 
 function ProfilePage() {
     const { username } = useParams();

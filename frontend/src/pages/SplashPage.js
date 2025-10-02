@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import LoginForm from '../components/forms/LoginForm';
-import RegisterForm from '../components/forms/RegisterForm';
+import LoginForm from '../components/forms/LoginForm.js';
+import RegisterForm from '../components/forms/RegisterForm.js';
 
 function SplashPage() {
     const [showRegister, setShowRegister] = useState(false);
