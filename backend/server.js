@@ -1,3 +1,4 @@
+// backend/server.js
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -68,5 +69,4 @@ app.get('*', (req, res) => {
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`🚀 CodeVerse server running at http://localhost:${PORT}`);
-    console.log('May the code be with you...');
 });
