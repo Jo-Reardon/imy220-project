@@ -1,3 +1,8 @@
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome, faFolder, faUsers, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faHome, faFolder, faUsers, faSearch, faPlus);
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';

@@ -1,11 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserAstronaut } from '@fortawesome/free-solid-svg-icons';
+
 
 function Header({ user, onLogout }) {
     return (
         <header style={styles.header}>
             <div style={styles.logo}>
-                <img src="/assets/images/rocket-icon.svg" alt="Rocket" style={styles.logoIcon} />
+                <img
+                    src="/assets/images/rocket-logo.png"
+                    alt="Rocket"
+                    style={{ width: '50px', height: '50px', objectFit: 'contain' }}
+                />
+
                 <div>
                     <h1 style={styles.logoText}>CodeVerse</h1>
                     <p style={styles.tagline}>Collaborative Coding Across the Stars</p>
@@ -17,7 +25,7 @@ function Header({ user, onLogout }) {
                     <Link to="/home" style={styles.navLink}>Mission Feed</Link>
                     <Link to="/explore" style={styles.navLink}>Explore</Link>
                     <Link to={`/profile/${user.username}`} style={styles.navLink}>
-                        <img src={user.avatar} alt={user.name} style={styles.avatar} />
+                        <FontAwesomeIcon icon={faUserAstronaut} style={styles.avatarIcon} />
                     </Link>
                 </nav>
             )}
@@ -47,7 +55,7 @@ const styles = {
     logoText: {
         fontSize: '28px',
         margin: 0,
-        background: 'linear-gradient(135deg, #0FF6FC, #A259FF)',
+        background: 'linear-gradient(135deg, #0FF6FC, #ffa459ff)',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent'
     },
@@ -71,6 +79,14 @@ const styles = {
         height: '40px',
         borderRadius: '50%',
         border: '2px solid #0FF6FC'
+    },
+    avatarIcon: {
+        fontSize: '20px',
+        color: 'rgb(15, 20, 50)',
+        //border: '2px solid #ffffffff',
+        borderRadius: '50%',
+        padding: '6px',
+        background: '#fff'
     }
 };
 
