@@ -2,48 +2,54 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header.js';
 import ActivityFeed from '../components/ActivityFeed.js';
 import ProjectCard from '../components/ProjectCard.js';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faFolder, faUsers, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
-
+import { activity, projects } from '../utils/api.js';
 
 function HomePage() {
     const [user, setUser] = useState(null);
     const [activities, setActivities] = useState([]);
-    const [projects, setProjects] = useState([]);
-    const [feedType, setFeedType] = useState('local'); // 'local' or 'global'
+    const [projectsList, setProjectsList] = useState([]);
+    const [feedType, setFeedType] = useState('local');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Load user from localStorage
         const userData = localStorage.getItem('user');
         if (userData) {
             setUser(JSON.parse(userData));
         }
+    }, []);
 
-        // Fetch activities
-        fetchActivities();
-        fetchProjects();
-    }, [feedType]);
+    useEffect(() => {
+        if (user) {
+            fetchActivities();
+            fetchProjects();
+        }
+    }, [feedType, user]);
 
     const fetchActivities = async () => {
         try {
-            const response = await fetch(`/api/activity?type=${feedType}`);
-            const data = await response.json();
+            const data = await activity.getFeed(feedType, user._id);
             setActivities(data);
         } catch (error) {
             console.error('Error fetching activities:', error);
+            setActivities([]);
         }
     };
 
     const fetchProjects = async () => {
         try {
-            const response = await fetch('/api/projects/featured');
-            const data = await response.json();
-            setProjects(data);
+            const data = await projects.getFeatured();
+            setProjectsList(data);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching projects:', error);
+            setProjectsList([]);
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return <div style={styles.loading}>Loading...</div>;
+    }
 
     return (
         <div style={styles.container}>
@@ -54,26 +60,29 @@ function HomePage() {
                 <aside style={styles.sidebar}>
                     <nav style={styles.nav}>
                         <a href="/home" style={styles.navLink}>
-                            <FontAwesomeIcon icon={faHome} /> Mission Feed
+                            <i className="fas fa-home"></i> Mission Feed
                         </a>
                         <a href="/projects" style={styles.navLink}>
-                            <FontAwesomeIcon icon={faFolder} /> Your Projects
+                            <i className="fas fa-folder"></i> Your Projects
                         </a>
                         <a href="/friends" style={styles.navLink}>
-                            <FontAwesomeIcon icon={faUsers} /> Your Crew
+                            <i className="fas fa-users"></i> Your Crew
                         </a>
                         <a href="/explore" style={styles.navLink}>
-                            <FontAwesomeIcon icon={faSearch} /> Explore CodeVerse
+                            <i className="fas fa-rocket"></i> Explore CodeVerse
                         </a>
                     </nav>
 
                     <div style={styles.widget}>
-                        <h3 style={styles.widgetTitle}>Trending Hashtags</h3>
+                        <h3 style={styles.widgetTitle}>
+                            <i className="fas fa-hashtag"></i> Trending Hashtags
+                        </h3>
                         <div style={styles.hashtags}>
-                            <span style={styles.hashtag}>#Python</span>
-                            <span style={styles.hashtag}>#CSS</span>
-                            <span style={styles.hashtag}>#WebDev</span>
-                            <span style={styles.hashtag}>#React</span>
+                            {[...new Set(projectsList.flatMap(p => p.languages || []))].slice(0, 6).map((lang, i) => (
+                                <span key={i} style={styles.hashtag}>
+                                    <i className="fas fa-code"></i> {lang}
+                                </span>
+                            ))}
                         </div>
                     </div>
                 </aside>
@@ -81,19 +90,21 @@ function HomePage() {
                 {/* Main Content */}
                 <main style={styles.main}>
                     <div style={styles.header}>
-                        <h1 style={styles.title}>Mission Control: Code Activity Feed</h1>
+                        <h1 style={styles.title}>
+                            <i className="fas fa-satellite-dish"></i> Mission Control: Code Activity Feed
+                        </h1>
                         <div style={styles.feedToggle}>
                             <button
                                 style={feedType === 'local' ? styles.toggleActive : styles.toggleInactive}
                                 onClick={() => setFeedType('local')}
                             >
-                                Mission Feed
+                                <i className="fas fa-user-friends"></i> Mission Feed
                             </button>
                             <button
                                 style={feedType === 'global' ? styles.toggleActive : styles.toggleInactive}
                                 onClick={() => setFeedType('global')}
                             >
-                                Explore
+                                <i className="fas fa-globe"></i> Explore
                             </button>
                         </div>
                     </div>
@@ -101,9 +112,11 @@ function HomePage() {
                     <ActivityFeed activities={activities} />
 
                     <div style={styles.projectsSection}>
-                        <h2 style={styles.sectionTitle}>Projects</h2>
+                        <h2 style={styles.sectionTitle}>
+                            <i className="fas fa-project-diagram"></i> Projects
+                        </h2>
                         <div style={styles.projectGrid}>
-                            {projects.map(project => (
+                            {projectsList.map(project => (
                                 <ProjectCard key={project._id} project={project} />
                             ))}
                         </div>
@@ -113,27 +126,20 @@ function HomePage() {
                 {/* Right Sidebar */}
                 <aside style={styles.rightSidebar}>
                     <div style={styles.quickCreate}>
-                        <h3 style={styles.widgetTitle}>Quick Create</h3>
+                        <h3 style={styles.widgetTitle}>
+                            <i className="fas fa-plus-circle"></i> Quick Create
+                        </h3>
                         <button style={styles.createBtn}>
-                            <FontAwesomeIcon icon={faPlus} /> New Project
+                            <i className="fas fa-plus"></i> New Project
                         </button>
                     </div>
 
                     <div style={styles.widget}>
-                        <h3 style={styles.widgetTitle}>Friend Suggestions</h3>
+                        <h3 style={styles.widgetTitle}>
+                            <i className="fas fa-user-plus"></i> Friend Suggestions
+                        </h3>
                         <div style={styles.suggestions}>
-                            <div style={styles.suggestion}>
-                                <div style={styles.suggestionAvatar}>HS</div>
-                                <span>HanSolo</span>
-                            </div>
-                            <div style={styles.suggestion}>
-                                <div style={styles.suggestionAvatar}>PA</div>
-                                <span>PadmeAmidala</span>
-                            </div>
-                            <div style={styles.suggestion}>
-                                <div style={styles.suggestionAvatar}>AW</div>
-                                <span>AniWalkerOfTheSky</span>
-                            </div>
+                            <p style={styles.noData}>Connect with other developers</p>
                         </div>
                     </div>
                 </aside>
@@ -143,156 +149,30 @@ function HomePage() {
 }
 
 const styles = {
-    container: {
-        minHeight: '100vh'
-    },
-    content: {
-        display: 'grid',
-        gridTemplateColumns: '250px 1fr 300px',
-        gap: '20px',
-        padding: '20px',
-        maxWidth: '1400px',
-        margin: '0 auto'
-    },
-    sidebar: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px'
-    },
-    nav: {
-        background: 'rgba(15, 20, 50, 0.8)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(162, 89, 255, 0.3)',
-        borderRadius: '16px',
-        padding: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px'
-    },
-    navLink: {
-        color: '#EDEDED',
-        textDecoration: 'none',
-        padding: '12px',
-        borderRadius: '8px',
-        transition: 'all 0.3s ease'
-    },
-    widget: {
-        background: 'rgba(15, 20, 50, 0.8)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(162, 89, 255, 0.3)',
-        borderRadius: '16px',
-        padding: '20px'
-    },
-    widgetTitle: {
-        fontSize: '16px',
-        marginBottom: '16px',
-        fontFamily: 'Orbitron, sans-serif'
-    },
-    hashtags: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '8px'
-    },
-    hashtag: {
-        background: 'rgba(162, 89, 255, 0.2)',
-        padding: '6px 12px',
-        borderRadius: '20px',
-        fontSize: '14px',
-        border: '1px solid rgba(162, 89, 255, 0.4)'
-    },
-    main: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px'
-    },
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    title: {
-        fontSize: '28px',
-        fontFamily: 'Orbitron, sans-serif'
-    },
-    feedToggle: {
-        display: 'flex',
-        gap: '8px',
-        background: 'rgba(15, 20, 50, 0.8)',
-        padding: '4px',
-        borderRadius: '8px'
-    },
-    toggleActive: {
-        background: 'linear-gradient(135deg, #0FF6FC, #4F9FFF)',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '6px',
-        color: 'white',
-        fontWeight: 600,
-        cursor: 'pointer'
-    },
-    toggleInactive: {
-        background: 'transparent',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '6px',
-        color: '#EDEDED',
-        cursor: 'pointer'
-    },
-    projectsSection: {
-        marginTop: '20px'
-    },
-    sectionTitle: {
-        fontSize: '20px',
-        marginBottom: '16px',
-        fontFamily: 'Orbitron, sans-serif'
-    },
-    projectGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-        gap: '16px'
-    },
-    rightSidebar: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px'
-    },
-    quickCreate: {
-        background: 'rgba(15, 20, 50, 0.8)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(162, 89, 255, 0.3)',
-        borderRadius: '16px',
-        padding: '20px'
-    },
-    createBtn: {
-        width: '100%',
-        background: 'linear-gradient(135deg, #0FF6FC, #4F9FFF)',
-        border: 'none',
-        padding: '12px',
-        borderRadius: '8px',
-        color: 'white',
-        fontWeight: 600,
-        cursor: 'pointer'
-    },
-    suggestions: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px'
-    },
-    suggestion: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px'
-    },
-    suggestionAvatar: {
-        width: '40px',
-        height: '40px',
-        borderRadius: '50%',
-        background: 'linear-gradient(135deg, #A259FF, #FF6B9D)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontWeight: 600
-    }
+    container: { minHeight: '100vh' },
+    loading: { color: '#fff', textAlign: 'center', marginTop: '100px', fontSize: '20px' },
+    content: { display: 'grid', gridTemplateColumns: '250px 1fr 300px', gap: '20px', padding: '20px', maxWidth: '1400px', margin: '0 auto' },
+    sidebar: { display: 'flex', flexDirection: 'column', gap: '20px' },
+    nav: { background: 'rgba(15, 20, 50, 0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(162, 89, 255, 0.3)', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' },
+    navLink: { color: '#EDEDED', textDecoration: 'none', padding: '12px', borderRadius: '8px', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', gap: '8px' },
+    widget: { background: 'rgba(15, 20, 50, 0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(162, 89, 255, 0.3)', borderRadius: '16px', padding: '20px' },
+    widgetTitle: { fontSize: '16px', marginBottom: '16px', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', gap: '8px' },
+    hashtags: { display: 'flex', flexWrap: 'wrap', gap: '8px' },
+    hashtag: { background: 'rgba(162, 89, 255, 0.2)', padding: '6px 12px', borderRadius: '20px', fontSize: '14px', border: '1px solid rgba(162, 89, 255, 0.4)', display: 'flex', alignItems: 'center', gap: '6px' },
+    main: { display: 'flex', flexDirection: 'column', gap: '20px' },
+    header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' },
+    title: { fontSize: '24px', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', gap: '12px' },
+    feedToggle: { display: 'flex', gap: '8px', background: 'rgba(15, 20, 50, 0.8)', padding: '4px', borderRadius: '8px' },
+    toggleActive: { background: 'linear-gradient(135deg, #0FF6FC, #4F9FFF)', border: 'none', padding: '8px 16px', borderRadius: '6px', color: 'white', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' },
+    toggleInactive: { background: 'transparent', border: 'none', padding: '8px 16px', borderRadius: '6px', color: '#EDEDED', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' },
+    projectsSection: { marginTop: '20px' },
+    sectionTitle: { fontSize: '20px', marginBottom: '16px', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', gap: '10px' },
+    projectGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' },
+    rightSidebar: { display: 'flex', flexDirection: 'column', gap: '20px' },
+    quickCreate: { background: 'rgba(15, 20, 50, 0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(162, 89, 255, 0.3)', borderRadius: '16px', padding: '20px' },
+    createBtn: { width: '100%', background: 'linear-gradient(135deg, #0FF6FC, #4F9FFF)', border: 'none', padding: '12px', borderRadius: '8px', color: 'white', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' },
+    suggestions: { display: 'flex', flexDirection: 'column', gap: '12px' },
+    noData: { opacity: 0.6, fontSize: '14px' }
 };
 
 export default HomePage;
