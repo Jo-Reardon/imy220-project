@@ -11,6 +11,7 @@ import SplashPage from './pages/SplashPage.js';
 import LoginForm from './components/forms/LoginForm.js';
 import HomePage from './pages/HomePage.js';
 import ProfilePage from './pages/ProfilePage.js';
+import ExplorePage from './pages/ExplorePage.js';
 
 function App() {
     const isLoggedIn = localStorage.getItem('user');
@@ -20,11 +21,13 @@ function App() {
             <Starfield />
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={isLoggedIn ? <Navigate to="/home" /> : <SplashPage />} />
+                    <Route path="/" element={<SplashPage />} />
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/home" element={isLoggedIn ? <HomePage /> : <Navigate to="/" />} />
+                    <Route path="/explore" element={isLoggedIn ? <ExplorePage /> : <Navigate to="/" />} />
                     <Route path="/profile/:username" element={isLoggedIn ? <ProfilePage /> : <Navigate to="/" />} />
                 </Routes>
+
             </BrowserRouter>
         </>
     );
