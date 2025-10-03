@@ -8,7 +8,8 @@
     "build": "webpack",
     "build:watch": "webpack -w",
     "start": "npm run build && node backend/server.js",
-    "dev": "npm run build:watch"
+    "dev": "npm run build:watch",
+    "seed": "node backend/seed.js"
   },
   "keywords": [],
   "author": "",
