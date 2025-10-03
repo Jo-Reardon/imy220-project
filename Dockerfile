@@ -1,16 +1,15 @@
-# Use official Node.js LTS image
-FROM node:18-alpine
+# Use Node 20 LTS to match package requirements
+FROM node:20-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files for caching
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
-# Copy application files
+# Copy all application files
 COPY . .
 
 # Build frontend
@@ -19,5 +18,5 @@ RUN npm run build
 # Expose port
 EXPOSE 3000
 
-# Start the application
+# Start the server
 CMD ["node", "backend/server.js"]

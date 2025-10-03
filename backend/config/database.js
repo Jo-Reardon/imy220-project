@@ -1,6 +1,5 @@
 import { MongoClient } from 'mongodb';
 
-// REPLACE THIS WITH YOUR ACTUAL MONGODB ATLAS CONNECTION STRING
 const uri = "mongodb+srv://imy220:codeVerse@codeverse.0k5zwz5.mongodb.net/?retryWrites=true&w=majority&appName=codeVerse";
 
 let db;
