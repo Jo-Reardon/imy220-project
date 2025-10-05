@@ -105,7 +105,7 @@ function ProfilePage() {
                             <i className="fas fa-chart-bar"></i> STATS
                         </h3>
                         <p style={styles.statItem}>
-                            <i className="fas fa-project-diagram"></i> Projects - {userProjects.length}
+                            <i className="fas fa-diagram-project"></i> Projects - {userProjects.length}
                         </p>
                         <p style={styles.statItem}>
                             <i className="fas fa-user-friends"></i> Friends - {profile.friends?.length || 0}

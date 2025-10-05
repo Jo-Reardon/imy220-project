@@ -1,7 +1,34 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHome, faFolder, faUsers, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+        faHouse,
+        faFolder,
+        faUsers,
+        faRocket,
+        faHashtag,
+        faCode,
+        faSatelliteDish,
+        faUserGroup,
+        faGlobe,
+        faProjectDiagram,
+        faPlusCircle,
+        faPlus
+        } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faHome, faFolder, faUsers, faSearch, faPlus);
+library.add(
+        faHouse,
+        faFolder,
+        faUsers,
+        faRocket,
+        faHashtag,
+        faCode,
+        faSatelliteDish,
+        faUserGroup,
+        faGlobe,
+        faProjectDiagram,
+        faPlusCircle,
+        faPlus
+    );
+
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -12,20 +39,32 @@ import LoginForm from './components/forms/LoginForm.js';
 import HomePage from './pages/HomePage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import ExplorePage from './pages/ExplorePage.js';
+import FriendsPage from './pages/FriendsPage.js';
+import NewProjectPage from './pages/NewProjectPage.js';
 
 function App() {
     const isLoggedIn = localStorage.getItem('user');
 
     return (
         <>
-            <Starfield />
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<SplashPage />} />
+                    <Route
+                        path="/"
+                        element={
+                        <>
+                            <Starfield />
+                            <SplashPage />
+                        </>
+                        }
+                    />
                     <Route path="/login" element={<LoginForm />} />
-                    <Route path="/home" element={isLoggedIn ? <HomePage /> : <Navigate to="/" />} />
-                    <Route path="/explore" element={isLoggedIn ? <ExplorePage /> : <Navigate to="/" />} />
-                    <Route path="/profile/:username" element={isLoggedIn ? <ProfilePage /> : <Navigate to="/" />} />
+                    <Route path="/home" element={isLoggedIn ? <HomePage /> : <Navigate to="/login" />} />
+                    <Route path="/explore" element={isLoggedIn ? <ExplorePage /> : <Navigate to="/login" />} />
+                    <Route path="/profile/:username" element={isLoggedIn ? <ProfilePage /> : <Navigate to="/login" />} />
+                    <Route path="/friends" element={isLoggedIn ? <FriendsPage /> : <Navigate to="/login" />} />
+                    <Route path="/projects/new" element={isLoggedIn ? <NewProjectPage /> : <Navigate to="/login" />} />
+                    <Route path="/projects/:projectId/edit" element={isLoggedIn ? <NewProjectPage /> : <Navigate to="/login" />} />
                 </Routes>
 
             </BrowserRouter>

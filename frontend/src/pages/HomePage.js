@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import Header from '../components/Header.js';
 import ActivityFeed from '../components/ActivityFeed.js';
 import ProjectCard from '../components/ProjectCard.js';
+import FriendsList from '../components/FriendsList.js';
 import { activity, projects } from '../utils/api.js';
 
 function HomePage() {
@@ -11,6 +15,7 @@ function HomePage() {
     const [feedType, setFeedType] = useState('local');
     const [loading, setLoading] = useState(true);
 
+    // Load user from localStorage
     useEffect(() => {
         const userData = localStorage.getItem('user');
         if (userData) {
@@ -18,6 +23,7 @@ function HomePage() {
         }
     }, []);
 
+    // Fetch activities & projects after user is loaded
     useEffect(() => {
         if (user) {
             fetchActivities();
@@ -47,27 +53,28 @@ function HomePage() {
         }
     };
 
-    if (loading) {
+    if (loading || !user) {
         return <div style={styles.loading}>Loading...</div>;
     }
 
     return (
         <div style={styles.container}>
             <Header user={user} />
-            
+
             <div style={styles.content}>
                 {/* Sidebar */}
                 <aside style={styles.sidebar}>
                     <nav style={styles.nav}>
                         <a href="/home" style={styles.navLink}>
-                            <i className="fas fa-home"></i> Mission Feed
+                            <FontAwesomeIcon icon="house" style={{ fontSize: '14px', color: 'white' }} />
+                            Mission Feed
                         </a>
                         <a href="/projects" style={styles.navLink}>
                             <i className="fas fa-folder"></i> Your Projects
                         </a>
-                        <a href="/friends" style={styles.navLink}>
+                        <Link to="/friends" style={styles.navLink}>
                             <i className="fas fa-users"></i> Your Crew
-                        </a>
+                        </Link>
                         <a href="/explore" style={styles.navLink}>
                             <i className="fas fa-rocket"></i> Explore CodeVerse
                         </a>
@@ -98,7 +105,7 @@ function HomePage() {
                                 style={feedType === 'local' ? styles.toggleActive : styles.toggleInactive}
                                 onClick={() => setFeedType('local')}
                             >
-                                <i className="fas fa-user-friends"></i> Mission Feed
+                                <i className="fas fa-user-group"></i> Mission Feed
                             </button>
                             <button
                                 style={feedType === 'global' ? styles.toggleActive : styles.toggleInactive}
@@ -113,7 +120,7 @@ function HomePage() {
 
                     <div style={styles.projectsSection}>
                         <h2 style={styles.sectionTitle}>
-                            <i className="fas fa-project-diagram"></i> Projects
+                            <i className="fas fa-diagram-project"></i> Projects
                         </h2>
                         <div style={styles.projectGrid}>
                             {projectsList.map(project => (
@@ -129,19 +136,13 @@ function HomePage() {
                         <h3 style={styles.widgetTitle}>
                             <i className="fas fa-plus-circle"></i> Quick Create
                         </h3>
-                        <button style={styles.createBtn}>
+                        <Link to="/projects/new" style={styles.createBtn}>
                             <i className="fas fa-plus"></i> New Project
-                        </button>
+                        </Link>
                     </div>
 
-                    <div style={styles.widget}>
-                        <h3 style={styles.widgetTitle}>
-                            <i className="fas fa-user-plus"></i> Friend Suggestions
-                        </h3>
-                        <div style={styles.suggestions}>
-                            <p style={styles.noData}>Connect with other developers</p>
-                        </div>
-                    </div>
+                    {/* Only render FriendsList if user is available */}
+                    {user && <FriendsList userId={user._id} />}
                 </aside>
             </div>
         </div>
@@ -168,11 +169,9 @@ const styles = {
     projectsSection: { marginTop: '20px' },
     sectionTitle: { fontSize: '20px', marginBottom: '16px', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', gap: '10px' },
     projectGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' },
-    rightSidebar: { display: 'flex', flexDirection: 'column', gap: '20px' },
+    rightSidebar: { display: 'flex', flexDirection: 'column', gap: '20px', zIndex: '99999999' },
     quickCreate: { background: 'rgba(15, 20, 50, 0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(162, 89, 255, 0.3)', borderRadius: '16px', padding: '20px' },
     createBtn: { width: '100%', background: 'linear-gradient(135deg, #0FF6FC, #4F9FFF)', border: 'none', padding: '12px', borderRadius: '8px', color: 'white', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' },
-    suggestions: { display: 'flex', flexDirection: 'column', gap: '12px' },
-    noData: { opacity: 0.6, fontSize: '14px' }
 };
 
 export default HomePage;

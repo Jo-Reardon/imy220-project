@@ -4,11 +4,12 @@
   "description": "IMY 220 Version Control Website Project",
   "main": "index.js",
   "type": "module",
+  
   "scripts": {
     "build": "webpack",
     "build:watch": "webpack -w",
     "start": "npm run build && node backend/server.js",
-    "dev": "npm run build:watch",
+    "dev": "webpack serve --config webpack.config.cjs",
     "seed": "node backend/seed.js"
   },
   "keywords": [],
@@ -35,6 +36,7 @@
     "path": "^0.12.7",
     "regenerator-runtime": "^0.14.0",
     "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.2"
   }
 }

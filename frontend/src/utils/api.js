@@ -58,7 +58,8 @@ export const users = {
     unfriend: (userId, friendId) => apiRequest('/users/unfriend', {
         method: 'POST',
         body: JSON.stringify({ userId, friendId })
-    })
+    }),
+    getFriends: (userId) => apiRequest(`/users/${userId}/friends`)
 };
 
 // Projects
