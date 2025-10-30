@@ -149,3 +149,14 @@ export async function searchProjects(req, res, projectModel) {
         res.status(500).json({ message: 'Server error' });
     }
 }
+
+export async function getProjectCheckIns(req, res, checkInModel) {
+    try {
+        const { projectId } = req.params;
+        const checkIns = await checkInModel.findByProject(projectId);
+        res.json({ checkIns });
+    } catch (error) {
+        console.error('Get check-ins error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}

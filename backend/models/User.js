@@ -9,7 +9,7 @@ class User {
         const user = {
             username: userData.username,
             email: userData.email,
-            password: userData.password, // In production, hash this!
+            password: userData.password,
             name: userData.name || userData.username,
             bio: userData.bio || '',
             avatar: userData.avatar || null,
@@ -32,51 +32,100 @@ class User {
     }
 
     async findById(id) {
-        return await this.collection.findOne({ _id: new ObjectId(id) });
+        try {
+            return await this.collection.findOne({ _id: new ObjectId(id) });
+        } catch (error) {
+            return await this.collection.findOne({ _id: id });
+        }
     }
 
     async update(id, updateData) {
         updateData.updatedAt = new Date();
-        const result = await this.collection.findOneAndUpdate(
-            { _id: new ObjectId(id) },
-            { $set: updateData },
-            { returnDocument: 'after' }
-        );
-        return result;
+        try {
+            const result = await this.collection.findOneAndUpdate(
+                { _id: new ObjectId(id) },
+                { $set: updateData },
+                { returnDocument: 'after' }
+            );
+            return result;
+        } catch (error) {
+            const result = await this.collection.findOneAndUpdate(
+                { _id: id },
+                { $set: updateData },
+                { returnDocument: 'after' }
+            );
+            return result;
+        }
     }
 
     async delete(id) {
-        return await this.collection.deleteOne({ _id: new ObjectId(id) });
+        try {
+            return await this.collection.deleteOne({ _id: new ObjectId(id) });
+        } catch (error) {
+            return await this.collection.deleteOne({ _id: id });
+        }
     }
 
     async addFriend(userId, friendId) {
-        await this.collection.updateOne(
-            { _id: new ObjectId(userId) },
-            { $addToSet: { friends: friendId } }
-        );
+        try {
+            await this.collection.updateOne(
+                { _id: new ObjectId(userId) },
+                { $addToSet: { friends: friendId } }
+            );
+        } catch (error) {
+            await this.collection.updateOne(
+                { _id: userId },
+                { $addToSet: { friends: friendId } }
+            );
+        }
     }
 
     async removeFriend(userId, friendId) {
-        await this.collection.updateOne(
-            { _id: new ObjectId(userId) },
-            { $pull: { friends: friendId } }
-        );
+        try {
+            await this.collection.updateOne(
+                { _id: new ObjectId(userId) },
+                { $pull: { friends: friendId } }
+            );
+        } catch (error) {
+            await this.collection.updateOne(
+                { _id: userId },
+                { $pull: { friends: friendId } }
+            );
+        }
     }
 
     async sendFriendRequest(fromUserId, toUserId) {
-        await this.collection.updateOne(
-            { _id: new ObjectId(toUserId) },
-            { $addToSet: { friendRequests: fromUserId } }
-        );
+        try {
+            await this.collection.updateOne(
+                { _id: new ObjectId(toUserId) },
+                { $addToSet: { friendRequests: fromUserId } }
+            );
+        } catch (error) {
+            await this.collection.updateOne(
+                { _id: toUserId },
+                { $addToSet: { friendRequests: fromUserId } }
+            );
+        }
     }
 
     async acceptFriendRequest(userId, requesterId) {
-        await this.collection.updateOne(
-            { _id: new ObjectId(userId) },
-            { $pull: { friendRequests: requesterId } }
-        );
-        await this.addFriend(userId, requesterId);
-        await this.addFriend(requesterId, userId);
+        try {
+            // Remove from requests
+            await this.collection.updateOne(
+                { _id: new ObjectId(userId) },
+                { $pull: { friendRequests: requesterId } }
+            );
+            // Add to friends for both users
+            await this.addFriend(userId, requesterId);
+            await this.addFriend(requesterId, userId);
+        } catch (error) {
+            await this.collection.updateOne(
+                { _id: userId },
+                { $pull: { friendRequests: requesterId } }
+            );
+            await this.addFriend(userId, requesterId);
+            await this.addFriend(requesterId, userId);
+        }
     }
 
     async search(query) {

@@ -7,7 +7,8 @@ import {
     checkoutProject,
     checkinProject,
     getFeaturedProjects,
-    searchProjects
+    searchProjects,
+    getProjectCheckIns
 } from '../controllers/projectController.js';
 
 export function createProjectRoutes(projectModel, activityModel, checkInModel) {
@@ -16,6 +17,7 @@ export function createProjectRoutes(projectModel, activityModel, checkInModel) {
     router.get('/featured', (req, res) => getFeaturedProjects(req, res, projectModel));
     router.get('/search', (req, res) => searchProjects(req, res, projectModel));
     router.get('/:projectId', (req, res) => getProject(req, res, projectModel));
+    router.get('/:projectId/checkins', (req, res) => getProjectCheckIns(req, res, checkInModel));
     router.post('/', (req, res) => createProject(req, res, projectModel, activityModel));
     router.put('/:projectId', (req, res) => updateProject(req, res, projectModel));
     router.delete('/:projectId', (req, res) => deleteProject(req, res, projectModel));

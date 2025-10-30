@@ -12,6 +12,8 @@ function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [isFriend, setIsFriend] = useState(false);
+    const [hasSentRequest, setHasSentRequest] = useState(false);
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -35,6 +37,35 @@ function ProfilePage() {
         } catch (error) {
             console.error('Error fetching profile:', error);
             setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (user && profile) {
+            setIsFriend(user.friends?.includes(profile._id) || false);
+            setHasSentRequest(profile.friendRequests?.includes(user._id) || false);
+        }
+    }, [user, profile]);
+
+    const handleSendFriendRequest = async () => {
+        try {
+            await users.sendFriendRequest(user._id, profile._id);
+            setHasSentRequest(true);
+            alert('Friend request sent!');
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
+    const handleUnfriend = async () => {
+        if (!window.confirm('Are you sure you want to unfriend this user?')) return;
+        
+        try {
+            await users.unfriend(user._id, profile._id);
+            setIsFriend(false);
+            fetchProfile();
+        } catch (error) {
+            alert(error.message);
         }
     };
 
@@ -98,6 +129,24 @@ function ProfilePage() {
                             <i className={`fas ${isEditing ? 'fa-save' : 'fa-edit'}`}></i>
                             {isEditing ? ' Save Profile' : ' Edit Profile'}
                         </button>
+                    )}
+
+                    {!isOwnProfile && (
+                        <div style={styles.friendActions}>
+                            {isFriend ? (
+                                <button style={styles.unfriendBtn} onClick={handleUnfriend}>
+                                    <i className="fas fa-user-minus"></i> Unfriend
+                                </button>
+                            ) : hasSentRequest ? (
+                                <button style={styles.pendingBtn} disabled>
+                                    <i className="fas fa-clock"></i> Request Sent
+                                </button>
+                            ) : (
+                                <button style={styles.addFriendBtn} onClick={handleSendFriendRequest}>
+                                    <i className="fas fa-user-plus"></i> Add Friend
+                                </button>
+                            )}
+                        </div>
                     )}
                     
                     <div style={styles.stats}>
@@ -184,7 +233,11 @@ const styles = {
     widget: { background: 'rgba(15, 20, 50, 0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(162, 89, 255, 0.3)', borderRadius: '16px', padding: '20px' },
     widgetTitle: { fontSize: '16px', marginBottom: '16px', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', gap: '8px' },
     highlights: { display: 'flex', flexDirection: 'column', gap: '12px' },
-    highlight: { fontSize: '14px', opacity: 0.8, display: 'flex', alignItems: 'center', gap: '8px' }
+    highlight: { fontSize: '14px', opacity: 0.8, display: 'flex', alignItems: 'center', gap: '8px' },
+    friendActions: { marginBottom: '20px' },
+    addFriendBtn: { width: '100%', background: 'linear-gradient(135deg, #0FF6FC, #4F9FFF)', border: 'none', padding: '12px', borderRadius: '8px', color: 'white', fontWeight: 600, cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' },
+    unfriendBtn: { width: '100%', background: 'transparent', border: '2px solid #FF4B5C', padding: '12px', borderRadius: '8px', color: '#FF4B5C', fontWeight: 600, cursor: 'pointer', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' },
+    pendingBtn: { width: '100%', background: 'rgba(255, 154, 60, 0.2)', border: '2px solid rgba(255, 154, 60, 0.5)', padding: '12px', borderRadius: '8px', color: '#FF9A3C', fontWeight: 600, cursor: 'not-allowed', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }
 };
 
 export default ProfilePage;

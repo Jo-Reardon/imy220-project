@@ -1,87 +1,53 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserAstronaut, faChevronDown, faSignOutAlt, faUser, faCog } from '@fortawesome/free-solid-svg-icons';
+import { auth } from '../utils/api.js';
 
 function Header({ user }) {
-    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        
+    const handleLogout = async () => {
+        await auth.logout();
         navigate('/');
     };
 
     return (
         <header style={styles.header}>
-            <div style={styles.logo}>
-                <img
-                    src="/assets/images/rocket-logo.png"
-                    alt="Rocket"
-                    style={{ width: '50px', height: '50px', objectFit: 'contain' }}
-                />
-
-                <div>
-                    <h1 style={styles.logoText}>CodeVerse</h1>
-                    <p style={styles.tagline}>Collaborative Coding Across the Stars</p>
+            <Link to="/home" style={styles.logoLink}>
+                <div style={styles.logo}>
+                    <i className="fas fa-rocket" style={styles.logoIcon}></i>
+                    <div>
+                        <h1 style={styles.logoText}>CodeVerse</h1>
+                        <p style={styles.tagline}>Collaborative Coding Across the Stars</p>
+                    </div>
                 </div>
-            </div>
+            </Link>
             
             {user && (
                 <nav style={styles.nav}>
-                    <Link to="/home" style={styles.navLink}>Mission Feed</Link>
-                    <Link to="/explore" style={styles.navLink}>Explore</Link>
-                    
-                    <div style={styles.userMenuContainer}>
-                        <button 
-                            style={styles.userButton}
-                            onClick={() => setShowDropdown(!showDropdown)}
-                        >
-                            <FontAwesomeIcon icon={faUserAstronaut} style={styles.avatarIcon} />
-                            <FontAwesomeIcon 
-                                icon={faChevronDown} 
-                                style={{
-                                    ...styles.chevron,
-                                    transform: showDropdown ? 'rotate(180deg)' : 'rotate(0deg)'
-                                }} 
-                            />
-                        </button>
-
-                        {showDropdown && (
-                            <div style={styles.dropdown}>
-                                <button 
-                                    style={{...styles.dropdownItem, ...styles.logoutButton}}
-                                    onClick={handleLogout}
-                                >
-                                    <FontAwesomeIcon icon={faSignOutAlt} />
-                                    <span>Logout</span>
-                                </button>
-
-                                <Link 
-                                    to={`/profile/${user.username}`} 
-                                    style={styles.dropdownItem}
-                                    onClick={() => setShowDropdown(false)}
-                                >
-                                    <FontAwesomeIcon icon={faUser} />
-                                    <span>View Profile</span>
-                                </Link>
-                                
-                                <Link 
-                                    to="/settings" 
-                                    style={styles.dropdownItem}
-                                    onClick={() => setShowDropdown(false)}
-                                >
-                                    <FontAwesomeIcon icon={faCog} />
-                                    <span>Settings</span>
-                                </Link>
-                                
-                                <div style={styles.divider}></div>
-                                
-                            </div>
-                        )}
-                    </div>
+                    <Link to="/home" style={styles.navLink}>
+                        <i className="fas fa-home"></i> Home
+                    </Link>
+                    <Link to="/projects" style={styles.navLink}>
+                        <i className="fas fa-folder"></i> Projects
+                    </Link>
+                    <Link to="/friends" style={styles.navLink}>
+                        <i className="fas fa-users"></i> Friends
+                    </Link>
+                    <Link to="/explore" style={styles.navLink}>
+                        <i className="fas fa-rocket"></i> Explore
+                    </Link>
+                    <Link to="/search" style={styles.navLink}>
+                        <i className="fas fa-search"></i> Search
+                    </Link>
+                    <Link to={`/profile/${user.username}`} style={styles.profileLink}>
+                        <div style={styles.avatar}>
+                            <i className="fas fa-user-astronaut"></i>
+                        </div>
+                        <span>{user.name}</span>
+                    </Link>
+                    <button onClick={handleLogout} style={styles.logoutBtn}>
+                        <i className="fas fa-sign-out-alt"></i> Logout
+                    </button>
                 </nav>
             )}
         </header>
@@ -94,101 +60,87 @@ const styles = {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '20px 40px',
-        background: 'rgba(11, 15, 43, 0.6)',
+        background: 'rgba(11, 15, 43, 0.8)',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(162, 89, 255, 0.3)',
-        position: 'relative'
+        position: 'sticky',
+        top: 0,
+        zIndex: 100
+    },
+    logoLink: {
+        textDecoration: 'none'
     },
     logo: {
         display: 'flex',
         alignItems: 'center',
         gap: '12px'
     },
+    logoIcon: {
+        fontSize: '32px',
+        color: '#0FF6FC'
+    },
     logoText: {
-        fontSize: '28px',
+        fontSize: '24px',
         margin: 0,
-        background: 'linear-gradient(135deg, #0FF6FC, #ffa459ff)',
+        background: 'linear-gradient(135deg, #0FF6FC, #A259FF)',
         WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent'
+        WebkitTextFillColor: 'transparent',
+        fontFamily: 'Orbitron, sans-serif'
     },
     tagline: {
-        fontSize: '12px',
+        fontSize: '10px',
         margin: 0,
         opacity: 0.7,
         color: '#EDEDED'
     },
     nav: {
         display: 'flex',
-        gap: '24px',
+        gap: '20px',
         alignItems: 'center'
     },
     navLink: {
         color: '#EDEDED',
+        textDecoration: 'none',
         fontWeight: 500,
         transition: 'color 0.3s ease',
-        textDecoration: 'none'
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+        fontSize: '14px'
     },
-    userMenuContainer: {
-        position: 'relative'
-    },
-    userButton: {
-        background: 'transparent',
-        border: 'none',
-        cursor: 'pointer',
+    profileLink: {
+        color: '#EDEDED',
+        textDecoration: 'none',
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        padding: '4px'
+        padding: '8px 12px',
+        borderRadius: '8px',
+        background: 'rgba(162, 89, 255, 0.1)',
+        border: '1px solid rgba(162, 89, 255, 0.3)'
     },
-    avatarIcon: {
-        fontSize: '20px',
-        color: 'rgb(15, 20, 50)',
+    avatar: {
+        width: '32px',
+        height: '32px',
         borderRadius: '50%',
-        padding: '6px',
-        background: '#fff'
-    },
-    chevron: {
-        fontSize: '12px',
-        color: '#EDEDED',
-        transition: 'transform 0.3s ease'
-    },
-    dropdown: {
-        position: 'absolute',
-        top: 'calc(100% + 10px)',
-        right: 0,
-        background: 'rgba(11, 15, 43, 0.95)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(162, 89, 255, 0.3)',
-        borderRadius: '12px',
-        padding: '8px',
-        minWidth: '180px',
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
-        zIndex: 9999999999
-    },
-    dropdownItem: {
+        background: 'linear-gradient(135deg, #0FF6FC, #A259FF)',
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
-        padding: '12px 16px',
-        color: '#EDEDED',
-        textDecoration: 'none',
+        justifyContent: 'center',
+        fontSize: '14px'
+    },
+    logoutBtn: {
         background: 'transparent',
-        border: 'none',
-        width: '100%',
-        cursor: 'pointer',
+        border: '1px solid #FF4B5C',
+        color: '#FF4B5C',
+        padding: '8px 16px',
         borderRadius: '8px',
-        transition: 'background 0.2s ease',
-        fontSize: '14px',
-        fontWeight: 500,
-        textAlign: 'left'
-    },
-    divider: {
-        height: '1px',
-        background: 'rgba(162, 89, 255, 0.2)',
-        margin: '8px 0'
-    },
-    logoutButton: {
-        color: '#FF5959'
+        cursor: 'pointer',
+        fontWeight: 600,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+        fontSize: '14px'
     }
 };
 
