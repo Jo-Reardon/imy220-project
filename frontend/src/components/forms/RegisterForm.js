@@ -1,54 +1,36 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { auth } from '../../utils/api.js';
 
-function RegisterForm({ onBack }) {
+function RegisterForm({ onSuccess }) {
     const [formData, setFormData] = useState({
         username: '',
+        name: '',
         email: '',
         password: '',
         confirmPassword: '',
-        agreedToTerms: false
+        bio: ''
     });
     const [errors, setErrors] = useState({});
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         setFormData({
             ...formData,
-            [e.target.name]: value
+            [e.target.name]: e.target.value
         });
+        // Clear error for this field
+        setErrors({ ...errors, [e.target.name]: '' });
     };
 
     const validate = () => {
         const newErrors = {};
 
-        if (!formData.username) {
-            newErrors.username = 'Username is required';
-        } else if (formData.username.length < 3) {
-            newErrors.username = 'Username must be at least 3 characters';
-        }
-
-        if (!formData.email) {
-            newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = 'Email is invalid';
-        }
-
-        if (!formData.password) {
-            newErrors.password = 'Password is required';
-        } else if (formData.password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters';
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = 'Passwords do not match';
-        }
-
-        if (!formData.agreedToTerms) {
-            newErrors.agreedToTerms = 'You must agree to the terms';
-        }
+        if (!formData.username.trim()) newErrors.username = 'Username is required';
+        if (!formData.name.trim()) newErrors.name = 'Name is required';
+        if (!formData.email.trim()) newErrors.email = 'Email is required';
+        if (!formData.password) newErrors.password = 'Password is required';
+        if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+        if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
 
         return newErrors;
     };
@@ -62,206 +44,191 @@ function RegisterForm({ onBack }) {
             return;
         }
 
-        try {
-            const data = await auth.register({
-                username: formData.username,
-                email: formData.email,
-                password: formData.password
-            });
+        setLoading(true);
 
-            localStorage.setItem('user', JSON.stringify(data.user));
-            navigate('/home');
+        try {
+            const result = await auth.register(
+                formData.username,
+                formData.email,
+                formData.password,
+                formData.name,
+                formData.bio
+            );
+            // Session management: Store user in localStorage
+            localStorage.setItem('user', JSON.stringify(result.user));
+            if (onSuccess) onSuccess();
         } catch (err) {
-            setErrors({ submit: err.message || 'Registration failed' });
+            setErrors({ submit: err.message || 'Registration failed. Please try again.' });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div style={styles.formBox}>
-            <h2 style={styles.title}>Register</h2>
-            <p style={styles.subtitle}>So, you're joining the rebellion?</p>
+        <div className="w-full">
+            <div className="text-center mb-8">
+                <i className="fas fa-user-plus text-5xl text-space-blue mb-4 inline-block"></i>
+                <h2 className="text-3xl font-orbitron font-bold mb-2">Join CodeVerse</h2>
+                <p className="text-sm opacity-70">Create your account and start coding</p>
+            </div>
 
             {errors.submit && (
-                <div style={styles.error}>{errors.submit}</div>
+                <div className="bg-solar-red/20 border border-solar-red rounded-lg p-3 mb-5 text-solar-red text-center text-sm">
+                    {errors.submit}
+                </div>
             )}
 
-            <form onSubmit={handleSubmit}>
-                <div style={styles.formGroup}>
-                    <label htmlFor="username" style={styles.label}>Username</label>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                {/* Username Field with Working Label */}
+                <div className="flex flex-col gap-2">
+                    <label 
+                        htmlFor="register-username" 
+                        className="font-semibold text-sm flex items-center gap-2 cursor-pointer hover:text-space-blue transition-colors"
+                    >
+                        <i className="fas fa-user"></i>
+                        <span>Username *</span>
+                    </label>
                     <input
+                        id="register-username"
                         type="text"
-                        id="username"
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
-                        style={styles.input}
-                        placeholder="SkywalkerLuke"
+                        required
+                        placeholder="Choose a username"
+                        className="w-full bg-cosmic-dark/60 border-2 border-nebula-purple/30 rounded-lg px-4 py-3 text-white text-sm focus:border-space-blue focus:outline-none transition-all"
                     />
-                    {errors.username && <span style={styles.errorText}>{errors.username}</span>}
+                    {errors.username && <span className="text-solar-red text-xs">{errors.username}</span>}
                 </div>
 
-                <div style={styles.formGroup}>
-                    <label htmlFor="email" style={styles.label}>Email</label>
+                {/* Name Field with Working Label */}
+                <div className="flex flex-col gap-2">
+                    <label 
+                        htmlFor="register-name" 
+                        className="font-semibold text-sm flex items-center gap-2 cursor-pointer hover:text-space-blue transition-colors"
+                    >
+                        <i className="fas fa-id-card"></i>
+                        <span>Full Name *</span>
+                    </label>
                     <input
+                        id="register-name"
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        placeholder="Your full name"
+                        className="w-full bg-cosmic-dark/60 border-2 border-nebula-purple/30 rounded-lg px-4 py-3 text-white text-sm focus:border-space-blue focus:outline-none transition-all"
+                    />
+                    {errors.name && <span className="text-solar-red text-xs">{errors.name}</span>}
+                </div>
+
+                {/* Email Field with Working Label */}
+                <div className="flex flex-col gap-2">
+                    <label 
+                        htmlFor="register-email" 
+                        className="font-semibold text-sm flex items-center gap-2 cursor-pointer hover:text-space-blue transition-colors"
+                    >
+                        <i className="fas fa-envelope"></i>
+                        <span>Email Address *</span>
+                    </label>
+                    <input
+                        id="register-email"
                         type="email"
-                        id="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        style={styles.input}
-                        placeholder="rebel@alliance.com"
+                        required
+                        placeholder="your@email.com"
+                        className="w-full bg-cosmic-dark/60 border-2 border-nebula-purple/30 rounded-lg px-4 py-3 text-white text-sm focus:border-space-blue focus:outline-none transition-all"
                     />
-                    {errors.email && <span style={styles.errorText}>{errors.email}</span>}
+                    {errors.email && <span className="text-solar-red text-xs">{errors.email}</span>}
                 </div>
 
-                <div style={styles.formGroup}>
-                    <label htmlFor="password" style={styles.label}>Password</label>
+                {/* Password Field with Working Label */}
+                <div className="flex flex-col gap-2">
+                    <label 
+                        htmlFor="register-password" 
+                        className="font-semibold text-sm flex items-center gap-2 cursor-pointer hover:text-space-blue transition-colors"
+                    >
+                        <i className="fas fa-lock"></i>
+                        <span>Password *</span>
+                    </label>
                     <input
+                        id="register-password"
                         type="password"
-                        id="password"
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        style={styles.input}
-                        placeholder="••••••••"
+                        required
+                        placeholder="Minimum 6 characters"
+                        className="w-full bg-cosmic-dark/60 border-2 border-nebula-purple/30 rounded-lg px-4 py-3 text-white text-sm focus:border-space-blue focus:outline-none transition-all"
                     />
-                    {errors.password && <span style={styles.errorText}>{errors.password}</span>}
+                    {errors.password && <span className="text-solar-red text-xs">{errors.password}</span>}
                 </div>
 
-                <div style={styles.formGroup}>
-                    <label htmlFor="confirmPassword" style={styles.label}>Confirm Password</label>
+                {/* Confirm Password Field with Working Label */}
+                <div className="flex flex-col gap-2">
+                    <label 
+                        htmlFor="register-confirm-password" 
+                        className="font-semibold text-sm flex items-center gap-2 cursor-pointer hover:text-space-blue transition-colors"
+                    >
+                        <i className="fas fa-lock"></i>
+                        <span>Confirm Password *</span>
+                    </label>
                     <input
+                        id="register-confirm-password"
                         type="password"
-                        id="confirmPassword"
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        style={styles.input}
-                        placeholder="••••••••"
+                        required
+                        placeholder="Re-enter password"
+                        className="w-full bg-cosmic-dark/60 border-2 border-nebula-purple/30 rounded-lg px-4 py-3 text-white text-sm focus:border-space-blue focus:outline-none transition-all"
                     />
-                    {errors.confirmPassword && <span style={styles.errorText}>{errors.confirmPassword}</span>}
+                    {errors.confirmPassword && <span className="text-solar-red text-xs">{errors.confirmPassword}</span>}
                 </div>
 
-                <div style={styles.checkboxGroup}>
-                    <input
-                        type="checkbox"
-                        id="agreedToTerms"
-                        name="agreedToTerms"
-                        checked={formData.agreedToTerms}
-                        onChange={handleChange}
-                        style={styles.checkbox}
-                    />
-                    <label htmlFor="agreedToTerms" style={styles.checkboxLabel}>
-                        I pledge allegiance to the CodeVerse
+                {/* Bio Field with Working Label (Optional) */}
+                <div className="flex flex-col gap-2">
+                    <label 
+                        htmlFor="register-bio" 
+                        className="font-semibold text-sm flex items-center gap-2 cursor-pointer hover:text-space-blue transition-colors"
+                    >
+                        <i className="fas fa-comment"></i>
+                        <span>Bio (Optional)</span>
                     </label>
+                    <textarea
+                        id="register-bio"
+                        name="bio"
+                        value={formData.bio}
+                        onChange={handleChange}
+                        placeholder="Tell us about yourself..."
+                        rows="3"
+                        className="w-full bg-cosmic-dark/60 border-2 border-nebula-purple/30 rounded-lg px-4 py-3 text-white text-sm focus:border-space-blue focus:outline-none transition-all resize-none"
+                    />
                 </div>
-                {errors.agreedToTerms && <span style={styles.errorText}>{errors.agreedToTerms}</span>}
 
-                <button type="submit" style={styles.submitBtn}>
-                    Launch
+                <button 
+                    type="submit" 
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-stellar-orange to-solar-red text-white px-4 py-4 rounded-lg text-base font-semibold flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                >
+                    {loading ? (
+                        <>
+                            <i className="fas fa-spinner fa-spin"></i>
+                            <span>Creating Account...</span>
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-rocket"></i>
+                            <span>Create Account</span>
+                        </>
+                    )}
                 </button>
             </form>
-
-            <div style={styles.footer}>
-                <a href="/login" style={styles.link}>Already a Jedi? Log In.</a>
-            </div>
         </div>
     );
 }
-
-const styles = {
-    formBox: {
-        background: 'rgba(15, 20, 50, 0.8)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(162, 89, 255, 0.3)',
-        borderRadius: '16px',
-        padding: '48px',
-        maxWidth: '450px',
-        width: '100%',
-        boxShadow: '0 8px 32px rgba(162, 89, 255, 0.15)'
-    },
-    title: {
-        fontSize: '36px',
-        marginBottom: '8px',
-        textAlign: 'center',
-        fontFamily: 'Orbitron, sans-serif'
-    },
-    subtitle: {
-        textAlign: 'center',
-        marginBottom: '32px',
-        opacity: 0.8
-    },
-    error: {
-        background: 'rgba(239, 68, 68, 0.2)',
-        border: '1px solid #FF4B5C',
-        borderRadius: '8px',
-        padding: '12px',
-        marginBottom: '20px',
-        color: '#FF4B5C',
-        textAlign: 'center'
-    },
-    formGroup: {
-        marginBottom: '20px'
-    },
-    label: {
-        display: 'block',
-        marginBottom: '8px',
-        fontWeight: 500
-    },
-    input: {
-        width: '100%',
-        background: 'rgba(11, 15, 43, 0.6)',
-        border: '2px solid rgba(162, 89, 255, 0.3)',
-        borderRadius: '8px',
-        padding: '12px 16px',
-        color: '#EDEDED',
-        fontSize: '16px',
-        fontFamily: 'Rajdhani, sans-serif'
-    },
-    errorText: {
-        color: '#FF4B5C',
-        fontSize: '14px',
-        marginTop: '4px',
-        display: 'block'
-    },
-    checkboxGroup: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        marginBottom: '24px'
-    },
-    checkbox: {
-        width: '18px',
-        height: '18px',
-        cursor: 'pointer'
-    },
-    checkboxLabel: {
-        cursor: 'pointer',
-        fontSize: '14px'
-    },
-    submitBtn: {
-        width: '100%',
-        background: 'linear-gradient(135deg, #FF9A3C, #FF6B35)',
-        border: 'none',
-        padding: '14px',
-        borderRadius: '8px',
-        fontFamily: 'Orbitron, sans-serif',
-        fontSize: '16px',
-        fontWeight: 600,
-        color: 'white',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        boxShadow: '0 0 20px rgba(255, 154, 60, 0.3)'
-    },
-    footer: {
-        marginTop: '24px',
-        textAlign: 'center',
-        fontSize: '14px'
-    },
-    link: {
-        color: '#0FF6FC',
-        textDecoration: 'none'
-    }
-};
 
 export default RegisterForm;

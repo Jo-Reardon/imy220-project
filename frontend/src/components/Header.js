@@ -34,7 +34,7 @@ function Header({ user }) {
                         <i className="fas fa-users"></i> Friends
                     </Link>
                     <Link to="/explore" style={styles.navLink}>
-                        <i className="fas fa-rocket"></i> Explore
+                        <i className="fas fa-compass"></i> Explore
                     </Link>
                     <Link to="/search" style={styles.navLink}>
                         <i className="fas fa-search"></i> Search
@@ -46,7 +46,7 @@ function Header({ user }) {
                         <span>{user.name}</span>
                     </Link>
                     <button onClick={handleLogout} style={styles.logoutBtn}>
-                        <i className="fas fa-sign-out-alt"></i> Logout
+                        <i className="fas fa-sign-out-alt"></i>
                     </button>
                 </nav>
             )}
@@ -59,8 +59,8 @@ const styles = {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '20px 40px',
-        background: 'rgba(11, 15, 43, 0.8)',
+        padding: '16px 40px',
+        background: 'rgba(11, 15, 43, 0.95)',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(162, 89, 255, 0.3)',
         position: 'sticky',
@@ -76,11 +76,11 @@ const styles = {
         gap: '12px'
     },
     logoIcon: {
-        fontSize: '32px',
+        fontSize: '28px',
         color: '#0FF6FC'
     },
     logoText: {
-        fontSize: '24px',
+        fontSize: '22px',
         margin: 0,
         background: 'linear-gradient(135deg, #0FF6FC, #A259FF)',
         WebkitBackgroundClip: 'text',
@@ -88,14 +88,14 @@ const styles = {
         fontFamily: 'Orbitron, sans-serif'
     },
     tagline: {
-        fontSize: '10px',
+        fontSize: '9px',
         margin: 0,
         opacity: 0.7,
         color: '#EDEDED'
     },
     nav: {
         display: 'flex',
-        gap: '20px',
+        gap: '16px',
         alignItems: 'center'
     },
     navLink: {
@@ -106,7 +106,9 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         gap: '6px',
-        fontSize: '14px'
+        fontSize: '14px',
+        padding: '8px 12px',
+        borderRadius: '6px'
     },
     profileLink: {
         color: '#EDEDED',
@@ -114,27 +116,27 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        padding: '8px 12px',
+        padding: '6px 12px',
         borderRadius: '8px',
-        background: 'rgba(162, 89, 255, 0.1)',
+        background: 'rgba(162, 89, 255, 0.15)',
         border: '1px solid rgba(162, 89, 255, 0.3)'
     },
     avatar: {
-        width: '32px',
-        height: '32px',
+        width: '28px',
+        height: '28px',
         borderRadius: '50%',
         background: 'linear-gradient(135deg, #0FF6FC, #A259FF)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '14px'
+        fontSize: '12px'
     },
     logoutBtn: {
         background: 'transparent',
         border: '1px solid #FF4B5C',
         color: '#FF4B5C',
-        padding: '8px 16px',
-        borderRadius: '8px',
+        padding: '8px 12px',
+        borderRadius: '6px',
         cursor: 'pointer',
         fontWeight: 600,
         display: 'flex',

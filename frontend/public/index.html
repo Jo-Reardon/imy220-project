@@ -3,11 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeVerse - Version Control Platform</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <title>CodeVerse - Collaborative Coding Across the Stars</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cosmic-dark': '#0B0F2B',
+                        'space-blue': '#0FF6FC',
+                        'nebula-purple': '#A259FF',
+                        'stellar-orange': '#FF9A3C',
+                        'solar-red': '#FF4B5C',
+                        'deep-space': '#0F1432',
+                    },
+                    fontFamily: {
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'rajdhani': ['Rajdhani', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="/styles/style.css">
 </head>
-<body>
+<body class="bg-cosmic-dark text-white font-rajdhani">
     <div id="root"></div>
-    <script src="bundle.js"></script>
+    <script src="/bundle.js"></script>
 </body>
 </html>

@@ -1,186 +1,116 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { auth } from '../../utils/api.js';
 
-function LoginForm() {
-    const [formData, setFormData] = useState({ email: '', password: '' });
+function LoginForm({ onSuccess }) {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
+        setError('');
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setError('');
 
-        // Client-side validation
-        if (!formData.email || !formData.password) {
-            setError('All fields are required');
-            return;
-        }
-
-        if (!formData.email.includes('@')) {
-            setError('Please enter a valid email address');
-            return;
-        }
-
         try {
-            const data = await auth.login(formData);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            navigate('/home');
+            const result = await auth.login(formData.email, formData.password);
+            // Session management: Store user in localStorage
+            localStorage.setItem('user', JSON.stringify(result.user));
+            if (onSuccess) onSuccess();
         } catch (err) {
-            setError(err.message || 'Login failed');
+            setError(err.message || 'Login failed. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.formBox}>
-                <h2 style={styles.title}>Log In</h2>
-                <p style={styles.subtitle}>Welcome back, Commander!</p>
-
-                {error && (
-                    <div style={styles.error}>
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleSubmit}>
-                    <div style={styles.formGroup}>
-                        <label htmlFor="email" style={styles.label}>
-                            Email/Username
-                        </label>
-                        <input
-                            type="text"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            style={styles.input}
-                            placeholder="your.email@galaxy.com"
-                        />
-                    </div>
-
-                    <div style={styles.formGroup}>
-                        <label htmlFor="password" style={styles.label}>
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            style={styles.input}
-                            placeholder="••••••••"
-                        />
-                    </div>
-
-                    <button type="submit" style={styles.submitBtn}>
-                        Engage Hyperdrive
-                    </button>
-                </form>
-
-                <div style={styles.footer}>
-                    <a href="/forgot-password" style={styles.link}>Forgot Password?</a>
-                    <span style={styles.separator}>|</span>
-                    <a href="/" style={styles.link}>New cadet? Register Now!</a>
-                </div>
+        <div className="w-full">
+            <div className="text-center mb-8">
+                <i className="fas fa-sign-in-alt text-5xl text-space-blue mb-4 inline-block"></i>
+                <h2 className="text-3xl font-orbitron font-bold mb-2">Welcome Back</h2>
+                <p className="text-sm opacity-70">Sign in to continue your mission</p>
             </div>
+
+            {error && (
+                <div className="bg-solar-red/20 border border-solar-red rounded-lg p-3 mb-5 text-solar-red text-center text-sm">
+                    {error}
+                </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                {/* Email Field with Working Label */}
+                <div className="flex flex-col gap-2">
+                    <label 
+                        htmlFor="login-email" 
+                        className="font-semibold text-sm flex items-center gap-2 cursor-pointer hover:text-space-blue transition-colors"
+                    >
+                        <i className="fas fa-envelope"></i>
+                        <span>Email Address</span>
+                    </label>
+                    <input
+                        id="login-email"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        placeholder="your@email.com"
+                        className="w-full bg-cosmic-dark/60 border-2 border-nebula-purple/30 rounded-lg px-4 py-3 text-white text-sm focus:border-space-blue focus:outline-none transition-all"
+                    />
+                </div>
+
+                {/* Password Field with Working Label */}
+                <div className="flex flex-col gap-2">
+                    <label 
+                        htmlFor="login-password" 
+                        className="font-semibold text-sm flex items-center gap-2 cursor-pointer hover:text-space-blue transition-colors"
+                    >
+                        <i className="fas fa-lock"></i>
+                        <span>Password</span>
+                    </label>
+                    <input
+                        id="login-password"
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter your password"
+                        className="w-full bg-cosmic-dark/60 border-2 border-nebula-purple/30 rounded-lg px-4 py-3 text-white text-sm focus:border-space-blue focus:outline-none transition-all"
+                    />
+                </div>
+
+                <button 
+                    type="submit" 
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-space-blue to-nebula-purple text-white px-4 py-4 rounded-lg text-base font-semibold flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                >
+                    {loading ? (
+                        <>
+                            <i className="fas fa-spinner fa-spin"></i>
+                            <span>Signing In...</span>
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-rocket"></i>
+                            <span>Sign In</span>
+                        </>
+                    )}
+                </button>
+            </form>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        padding: '20px'
-    },
-    formBox: {
-        background: 'rgba(15, 20, 50, 0.8)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(162, 89, 255, 0.3)',
-        borderRadius: '16px',
-        padding: '48px',
-        maxWidth: '450px',
-        width: '100%',
-        boxShadow: '0 8px 32px rgba(162, 89, 255, 0.15)'
-    },
-    title: {
-        fontSize: '36px',
-        marginBottom: '8px',
-        textAlign: 'center',
-        fontFamily: 'Orbitron, sans-serif'
-    },
-    subtitle: {
-        textAlign: 'center',
-        marginBottom: '32px',
-        opacity: 0.8
-    },
-    error: {
-        background: 'rgba(239, 68, 68, 0.2)',
-        border: '1px solid #FF4B5C',
-        borderRadius: '8px',
-        padding: '12px',
-        marginBottom: '20px',
-        color: '#FF4B5C',
-        textAlign: 'center'
-    },
-    formGroup: {
-        marginBottom: '24px'
-    },
-    label: {
-        display: 'block',
-        marginBottom: '8px',
-        fontWeight: 500
-    },
-    input: {
-        width: '100%',
-        background: 'rgba(11, 15, 43, 0.6)',
-        border: '2px solid rgba(162, 89, 255, 0.3)',
-        borderRadius: '8px',
-        padding: '12px 16px',
-        color: '#EDEDED',
-        fontSize: '16px',
-        fontFamily: 'Rajdhani, sans-serif',
-        transition: 'all 0.3s ease'
-    },
-    submitBtn: {
-        width: '100%',
-        background: 'linear-gradient(135deg, #0FF6FC, #4F9FFF)',
-        border: 'none',
-        padding: '14px',
-        borderRadius: '8px',
-        fontFamily: 'Orbitron, sans-serif',
-        fontSize: '16px',
-        fontWeight: 600,
-        color: 'white',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        boxShadow: '0 0 20px rgba(15, 246, 252, 0.3)',
-        marginTop: '8px'
-    },
-    footer: {
-        marginTop: '24px',
-        textAlign: 'center',
-        fontSize: '14px'
-    },
-    link: {
-        color: '#0FF6FC',
-        textDecoration: 'none'
-    },
-    separator: {
-        margin: '0 12px',
-        opacity: 0.5
-    }
-};
 
 export default LoginForm;

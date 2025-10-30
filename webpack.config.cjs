@@ -5,7 +5,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "frontend/public"),
     filename: "bundle.js",
-    publicPath: "/" // needed for devServer
+    publicPath: "/"
   },
   mode: "development",
   module: {
@@ -30,8 +30,8 @@ module.exports = {
     historyApiFallback: true,
      proxy: [
     {
-      context: ['/api'],           // any request starting with /api
-      target: 'http://localhost:3000', // your Node backend
+      context: ['/api'],
+      target: 'http://localhost:3000',
       changeOrigin: true,
       secure: false,
       onError(err, req, res) {

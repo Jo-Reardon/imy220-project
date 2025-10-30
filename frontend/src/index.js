@@ -1,35 +1,3 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-        faHouse,
-        faFolder,
-        faUsers,
-        faRocket,
-        faHashtag,
-        faCode,
-        faSatelliteDish,
-        faUserGroup,
-        faGlobe,
-        faProjectDiagram,
-        faPlusCircle,
-        faPlus
-        } from '@fortawesome/free-solid-svg-icons';
-
-library.add(
-        faHouse,
-        faFolder,
-        faUsers,
-        faRocket,
-        faHashtag,
-        faCode,
-        faSatelliteDish,
-        faUserGroup,
-        faGlobe,
-        faProjectDiagram,
-        faPlusCircle,
-        faPlus
-    );
-
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -39,6 +7,7 @@ import LoginForm from './components/forms/LoginForm.js';
 import HomePage from './pages/HomePage.js';
 import ProfilePage from './pages/ProfilePage.js';
 import ProjectDetailPage from './pages/ProjectDetailPage.js';
+import CreateProjectPage from './pages/CreateProjectPage.js';
 import SearchPage from './pages/SearchPage.js';
 import FriendsPage from './pages/FriendsPage.js';
 import MyProjectsPage from './pages/MyProjectsPage.js';
@@ -60,6 +29,9 @@ function App() {
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/home" element={
                         <PrivateRoute><HomePage /></PrivateRoute>
+                    } />
+                    <Route path="/create-project" element={
+                        <PrivateRoute><CreateProjectPage /></PrivateRoute>
                     } />
                     <Route path="/profile/:username" element={
                         <PrivateRoute><ProfilePage /></PrivateRoute>

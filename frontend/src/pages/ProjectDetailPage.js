@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header.js';
+import DiscussionBoard from '../components/DiscussionBoard.js';
 import { projects } from '../utils/api.js';
 
 function ProjectDetailPage() {
@@ -9,6 +10,9 @@ function ProjectDetailPage() {
     const [user, setUser] = useState(null);
     const [project, setProject] = useState(null);
     const [checkIns, setCheckIns] = useState([]);
+    const [members, setMembers] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
+    const [showAddMember, setShowAddMember] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
     const [loading, setLoading] = useState(true);
@@ -17,6 +21,7 @@ function ProjectDetailPage() {
         const userData = localStorage.getItem('user');
         if (userData) setUser(JSON.parse(userData));
         fetchProject();
+        fetchAllUsers();
     }, [projectId]);
 
     const fetchProject = async () => {
@@ -28,6 +33,21 @@ function ProjectDetailPage() {
                 description: data.project.description,
                 type: data.project.type
             });
+            
+            // Fetch members details
+            if (data.project.members && data.project.members.length > 0) {
+                const memberPromises = data.project.members.map(async (memberId) => {
+                    try {
+                        const response = await fetch(`/api/users/all`);
+                        const usersData = await response.json();
+                        return usersData.users.find(u => u._id === memberId);
+                    } catch (err) {
+                        return null;
+                    }
+                });
+                const memberData = await Promise.all(memberPromises);
+                setMembers(memberData.filter(m => m !== null));
+            }
             
             // Fetch check-ins
             try {
@@ -42,6 +62,49 @@ function ProjectDetailPage() {
         } catch (error) {
             console.error('Error fetching project:', error);
             setLoading(false);
+        }
+    };
+
+    const fetchAllUsers = async () => {
+        try {
+            const response = await fetch('/api/users/all');
+            const data = await response.json();
+            setAllUsers(data.users || []);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    const handleAddMember = async (userId) => {
+        try {
+            const response = await fetch(`/api/projects/${projectId}/members`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId })
+            });
+
+            if (response.ok) {
+                setShowAddMember(false);
+                fetchProject();
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
+    const handleRemoveMember = async (userId) => {
+        if (!window.confirm('Remove this member from the project?')) return;
+
+        try {
+            const response = await fetch(`/api/projects/${projectId}/members/${userId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                fetchProject();
+            }
+        } catch (error) {
+            alert(error.message);
         }
     };
 
@@ -103,8 +166,14 @@ function ProjectDetailPage() {
 
     const isOwner = user && project.ownerId === user._id;
     const isMember = user && project.members?.includes(user._id);
-    const canCheckout = project.status === 'checked-in' && isMember;
+    const canCheckout = project.status === 'checked-in' && (isMember || isOwner);
     const canCheckin = project.status === 'checked-out' && project.checkedOutBy === user?._id;
+
+    // Filter out users who are already members or owner
+    const availableUsers = allUsers.filter(u => 
+        u._id !== project.ownerId && 
+        !project.members?.includes(u._id)
+    );
 
     return (
         <div style={styles.container}>
@@ -193,9 +262,6 @@ function ProjectDetailPage() {
                                     <div key={i} style={styles.fileItem}>
                                         <i className="fas fa-file-code"></i>
                                         <span>{file.name}</span>
-                                        <button style={styles.downloadBtn}>
-                                            <i className="fas fa-download"></i>
-                                        </button>
                                     </div>
                                 ))}
                             </div>
@@ -217,22 +283,75 @@ function ProjectDetailPage() {
                             ))
                         )}
                     </section>
+
+                    <DiscussionBoard projectId={projectId} user={user} />
                 </main>
 
-                {/* Right Sidebar - Members & Discussion */}
+                {/* Right Sidebar - Members */}
                 <aside style={styles.rightSidebar}>
                     <div style={styles.card}>
-                        <h3 style={styles.cardTitle}>
-                            <i className="fas fa-users"></i> Members
-                        </h3>
-                        <p style={styles.noData}>{project.members?.length || 0} members</p>
-                    </div>
+                        <div style={styles.membersHeader}>
+                            <h3 style={styles.cardTitle}>
+                                <i className="fas fa-users"></i> Members
+                            </h3>
+                            {isOwner && (
+                                <button 
+                                    style={styles.addMemberBtn}
+                                    onClick={() => setShowAddMember(!showAddMember)}
+                                >
+                                    <i className="fas fa-plus"></i>
+                                </button>
+                            )}
+                        </div>
 
-                    <div style={styles.card}>
-                        <h3 style={styles.cardTitle}>
-                            <i className="fas fa-comments"></i> Discussion
-                        </h3>
-                        <p style={styles.noData}>No discussions yet</p>
+                        {showAddMember && isOwner && (
+                            <div style={styles.addMemberSection}>
+                                <p style={styles.addMemberTitle}>Add Member:</p>
+                                <div style={styles.userList}>
+                                    {availableUsers.length === 0 ? (
+                                        <p style={styles.noUsers}>No users available</p>
+                                    ) : (
+                                        availableUsers.map(u => (
+                                            <div key={u._id} style={styles.userItem}>
+                                                <span>{u.name} (@{u.username})</span>
+                                                <button
+                                                    style={styles.addBtn}
+                                                    onClick={() => handleAddMember(u._id)}
+                                                >
+                                                    <i className="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        <div style={styles.membersList}>
+                            {members.length === 0 ? (
+                                <p style={styles.noData}>No members yet</p>
+                            ) : (
+                                members.map(member => (
+                                    <div key={member._id} style={styles.memberItem}>
+                                        <div style={styles.memberAvatar}>
+                                            <i className="fas fa-user"></i>
+                                        </div>
+                                        <div style={styles.memberInfo}>
+                                            <p style={styles.memberName}>{member.name}</p>
+                                            <p style={styles.memberUsername}>@{member.username}</p>
+                                        </div>
+                                        {isOwner && (
+                                            <button
+                                                style={styles.removeMemberBtn}
+                                                onClick={() => handleRemoveMember(member._id)}
+                                            >
+                                                <i className="fas fa-times"></i>
+                                            </button>
+                                        )}
+                                    </div>
+                                ))
+                            )}
+                        </div>
                     </div>
                 </aside>
             </div>
@@ -263,11 +382,25 @@ const styles = {
     sectionTitle: { fontSize: '20px', fontFamily: 'Orbitron, sans-serif', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px' },
     fileList: { display: 'flex', flexDirection: 'column', gap: '8px' },
     fileItem: { background: 'rgba(162, 89, 255, 0.1)', padding: '12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '12px' },
-    downloadBtn: { marginLeft: 'auto', background: 'transparent', border: '1px solid #0FF6FC', color: '#0FF6FC', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' },
     checkInItem: { background: 'rgba(162, 89, 255, 0.1)', padding: '12px', borderRadius: '8px', marginBottom: '12px', borderLeft: '3px solid #A259FF' },
     message: { fontSize: '14px', opacity: 0.8, fontStyle: 'italic', marginTop: '8px' },
     rightSidebar: {},
-    cardTitle: { fontSize: '16px', fontFamily: 'Orbitron, sans-serif', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' },
+    cardTitle: { fontSize: '16px', fontFamily: 'Orbitron, sans-serif', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 },
+    membersHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' },
+    addMemberBtn: { background: 'linear-gradient(135deg, #0FF6FC, #4F9FFF)', border: 'none', width: '32px', height: '32px', borderRadius: '50%', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    addMemberSection: { marginBottom: '16px', padding: '12px', background: 'rgba(162, 89, 255, 0.1)', borderRadius: '8px', border: '1px solid rgba(162, 89, 255, 0.3)' },
+    addMemberTitle: { fontSize: '14px', fontWeight: 600, marginBottom: '8px' },
+    userList: { display: 'flex', flexDirection: 'column', gap: '8px' },
+    userItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px', background: 'rgba(11, 15, 43, 0.6)', borderRadius: '6px', fontSize: '12px' },
+    addBtn: { background: 'transparent', border: '1px solid #0FF6FC', color: '#0FF6FC', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '10px' },
+    noUsers: { fontSize: '12px', opacity: 0.6, textAlign: 'center', padding: '8px' },
+    membersList: { display: 'flex', flexDirection: 'column', gap: '12px' },
+    memberItem: { display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(162, 89, 255, 0.1)', borderRadius: '8px', border: '1px solid rgba(162, 89, 255, 0.2)' },
+    memberAvatar: { width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, #0FF6FC, #A259FF)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' },
+    memberInfo: { flex: 1 },
+    memberName: { fontSize: '14px', fontWeight: 600, margin: 0 },
+    memberUsername: { fontSize: '12px', opacity: 0.7, margin: '2px 0 0 0' },
+    removeMemberBtn: { background: 'transparent', border: '1px solid #FF4B5C', color: '#FF4B5C', width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' },
     noData: { opacity: 0.6, fontSize: '14px', textAlign: 'center', padding: '20px' }
 };
 

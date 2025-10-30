@@ -25,5 +25,32 @@ export function createProjectRoutes(projectModel, activityModel, checkInModel) {
     router.post('/:projectId/checkout', (req, res) => checkoutProject(req, res, projectModel, activityModel));
     router.post('/:projectId/checkin', (req, res) => checkinProject(req, res, projectModel, activityModel, checkInModel));
 
+    // Add member to project
+router.post('/:projectId/members', async (req, res) => {
+    try {
+        const { projectId } = req.params;
+        const { userId } = req.body;
+
+        await projectModel.addMember(projectId, userId);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Add member error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Remove member from project
+router.delete('/:projectId/members/:userId', async (req, res) => {
+    try {
+        const { projectId, userId } = req.params;
+
+        await projectModel.removeMember(projectId, userId);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Remove member error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
     return router;
 }

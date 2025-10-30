@@ -23,17 +23,20 @@ export async function apiRequest(endpoint, options = {}) {
     }
 }
 
-// Auth
+// Auth - Fixed to match LoginForm and RegisterForm parameters
 export const auth = {
-    login: (credentials) => apiRequest('/auth/login', {
+    login: (email, password) => apiRequest('/auth/login', {
         method: 'POST',
-        body: JSON.stringify(credentials)
+        body: JSON.stringify({ email, password })
     }),
-    register: (userData) => apiRequest('/auth/register', {
+    register: (username, email, password, name, bio) => apiRequest('/auth/register', {
         method: 'POST',
-        body: JSON.stringify(userData)
+        body: JSON.stringify({ username, email, password, name, bio })
     }),
-    logout: () => apiRequest('/auth/logout', { method: 'POST' })
+    logout: () => {
+        localStorage.removeItem('user');
+        return apiRequest('/auth/logout', { method: 'POST' });
+    }
 };
 
 // Users
@@ -85,11 +88,19 @@ export const projects = {
     checkin: (projectId, userId, username, files, message, version) => apiRequest(`/projects/${projectId}/checkin`, {
         method: 'POST',
         body: JSON.stringify({ userId, username, files, message, version })
+    }),
+    saveProject: (userId, projectId) => apiRequest('/projects/save', {
+        method: 'POST',
+        body: JSON.stringify({ userId, projectId })
+    }),
+    unsaveProject: (userId, projectId) => apiRequest('/projects/unsave', {
+        method: 'POST',
+        body: JSON.stringify({ userId, projectId })
     })
 };
 
 // Activity
 export const activity = {
-    getFeed: (type, userId) => apiRequest(`/activity?type=${type}&userId=${userId || ''}`),
-    search: (query) => apiRequest(`/activity/search?q=${query}`)
+    getFeed: (type, userId) => apiRequest(`/api/activity?type=${type}&userId=${userId || ''}`),
+    search: (query) => apiRequest(`/api/activity/search?q=${query}`)
 };

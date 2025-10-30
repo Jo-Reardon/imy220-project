@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.js';
 import ProjectCard from '../components/ProjectCard.js';
-import CreateProjectForm from '../components/forms/CreateProjectForm.js';
 import { projects } from '../utils/api.js';
 
 function MyProjectsPage() {
@@ -10,7 +9,6 @@ function MyProjectsPage() {
     const [user, setUser] = useState(null);
     const [myProjects, setMyProjects] = useState([]);
     const [memberProjects, setMemberProjects] = useState([]);
-    const [showCreateProject, setShowCreateProject] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -42,11 +40,6 @@ function MyProjectsPage() {
         }
     };
 
-    const handleProjectCreated = () => {
-        setShowCreateProject(false);
-        if (user) fetchProjects(user);
-    };
-
     if (loading) {
         return <div style={styles.loading}>Loading...</div>;
     }
@@ -62,9 +55,9 @@ function MyProjectsPage() {
                     </h1>
                     <button
                         style={styles.createBtn}
-                        onClick={() => setShowCreateProject(true)}
+                        onClick={() => navigate('/create-project')}
                     >
-                        <i className="fas fa-plus"></i> New Project
+                        <i className="fas fa-plus"></i> Create New Project
                     </button>
                 </div>
 
@@ -79,7 +72,7 @@ function MyProjectsPage() {
                             <p>You haven't created any projects yet</p>
                             <button
                                 style={styles.emptyBtn}
-                                onClick={() => setShowCreateProject(true)}
+                                onClick={() => navigate('/create-project')}
                             >
                                 <i className="fas fa-rocket"></i> Create Your First Project
                             </button>
@@ -112,13 +105,6 @@ function MyProjectsPage() {
                     )}
                 </section>
             </div>
-
-            {showCreateProject && (
-                <CreateProjectForm
-                    user={user}
-                    onClose={handleProjectCreated}
-                />
-            )}
         </div>
     );
 }

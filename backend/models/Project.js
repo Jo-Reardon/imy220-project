@@ -105,6 +105,34 @@ class Project {
             ]
         }).toArray();
     }
+
+    async addMember(projectId, userId) {
+    try {
+        await this.collection.updateOne(
+            { _id: new ObjectId(projectId) },
+            { $addToSet: { members: userId } }
+        );
+    } catch (error) {
+        await this.collection.updateOne(
+            { _id: projectId },
+            { $addToSet: { members: userId } }
+        );
+    }
+}
+
+async removeMember(projectId, userId) {
+    try {
+        await this.collection.updateOne(
+            { _id: new ObjectId(projectId) },
+            { $pull: { members: userId } }
+        );
+    } catch (error) {
+        await this.collection.updateOne(
+            { _id: projectId },
+            { $pull: { members: userId } }
+        );
+    }
+}
 }
 
 export default Project;

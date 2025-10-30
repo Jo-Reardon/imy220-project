@@ -16,6 +16,7 @@ class User {
             friends: [],
             friendRequests: [],
             projects: [],
+            savedProjects: [],  // ADDED: For saving/bookmarking projects
             createdAt: new Date(),
             updatedAt: new Date()
         };
@@ -37,6 +38,18 @@ class User {
         } catch (error) {
             return await this.collection.findOne({ _id: id });
         }
+    }
+
+    async findOne(query) {
+        return await this.collection.findOne(query);
+    }
+
+    async find(query) {
+        return this.collection.find(query);
+    }
+
+    async getAllUsers() {
+        return await this.collection.find({}).toArray();
     }
 
     async update(id, updateData) {
@@ -70,12 +83,12 @@ class User {
         try {
             await this.collection.updateOne(
                 { _id: new ObjectId(userId) },
-                { $addToSet: { friends: friendId } }
+                { $addToSet: { friends: friendId }, $set: { updatedAt: new Date() } }
             );
         } catch (error) {
             await this.collection.updateOne(
                 { _id: userId },
-                { $addToSet: { friends: friendId } }
+                { $addToSet: { friends: friendId }, $set: { updatedAt: new Date() } }
             );
         }
     }
@@ -84,12 +97,12 @@ class User {
         try {
             await this.collection.updateOne(
                 { _id: new ObjectId(userId) },
-                { $pull: { friends: friendId } }
+                { $pull: { friends: friendId }, $set: { updatedAt: new Date() } }
             );
         } catch (error) {
             await this.collection.updateOne(
                 { _id: userId },
-                { $pull: { friends: friendId } }
+                { $pull: { friends: friendId }, $set: { updatedAt: new Date() } }
             );
         }
     }
@@ -98,12 +111,12 @@ class User {
         try {
             await this.collection.updateOne(
                 { _id: new ObjectId(toUserId) },
-                { $addToSet: { friendRequests: fromUserId } }
+                { $addToSet: { friendRequests: fromUserId }, $set: { updatedAt: new Date() } }
             );
         } catch (error) {
             await this.collection.updateOne(
                 { _id: toUserId },
-                { $addToSet: { friendRequests: fromUserId } }
+                { $addToSet: { friendRequests: fromUserId }, $set: { updatedAt: new Date() } }
             );
         }
     }
@@ -113,7 +126,7 @@ class User {
             // Remove from requests
             await this.collection.updateOne(
                 { _id: new ObjectId(userId) },
-                { $pull: { friendRequests: requesterId } }
+                { $pull: { friendRequests: requesterId }, $set: { updatedAt: new Date() } }
             );
             // Add to friends for both users
             await this.addFriend(userId, requesterId);
@@ -121,10 +134,40 @@ class User {
         } catch (error) {
             await this.collection.updateOne(
                 { _id: userId },
-                { $pull: { friendRequests: requesterId } }
+                { $pull: { friendRequests: requesterId }, $set: { updatedAt: new Date() } }
             );
             await this.addFriend(userId, requesterId);
             await this.addFriend(requesterId, userId);
+        }
+    }
+
+    // ADDED: Save/bookmark a project
+    async saveProject(userId, projectId) {
+        try {
+            await this.collection.updateOne(
+                { _id: new ObjectId(userId) },
+                { $addToSet: { savedProjects: projectId }, $set: { updatedAt: new Date() } }
+            );
+        } catch (error) {
+            await this.collection.updateOne(
+                { _id: userId },
+                { $addToSet: { savedProjects: projectId }, $set: { updatedAt: new Date() } }
+            );
+        }
+    }
+
+    // ADDED: Unsave/unbookmark a project
+    async unsaveProject(userId, projectId) {
+        try {
+            await this.collection.updateOne(
+                { _id: new ObjectId(userId) },
+                { $pull: { savedProjects: projectId }, $set: { updatedAt: new Date() } }
+            );
+        } catch (error) {
+            await this.collection.updateOne(
+                { _id: userId },
+                { $pull: { savedProjects: projectId }, $set: { updatedAt: new Date() } }
+            );
         }
     }
 

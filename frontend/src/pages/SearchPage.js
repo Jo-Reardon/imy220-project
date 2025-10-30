@@ -1,38 +1,48 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header.js';
 import ProjectCard from '../components/ProjectCard.js';
 import { users, projects, activity } from '../utils/api.js';
 
 function SearchPage() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [user, setUser] = useState(() => {
         const userData = localStorage.getItem('user');
         return userData ? JSON.parse(userData) : null;
     });
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchType, setSearchType] = useState('projects');
+    const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
+    const [searchType, setSearchType] = useState(searchParams.get('type') || 'projects');
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
-        if (!searchQuery.trim()) return;
+    useEffect(() => {
+        const q = searchParams.get('q');
+        const type = searchParams.get('type');
+        if (q) {
+            setSearchQuery(q);
+            if (type) setSearchType(type);
+            performSearch(q, type || searchType);
+        }
+    }, [searchParams]);
+
+    const performSearch = async (query, type) => {
+        if (!query.trim()) return;
 
         setLoading(true);
         try {
             let data;
-            switch (searchType) {
+            switch (type) {
                 case 'users':
-                    data = await users.search(searchQuery);
+                    data = await users.search(query);
                     setResults(data.users || []);
                     break;
                 case 'projects':
-                    data = await projects.search(searchQuery);
+                    data = await projects.search(query);
                     setResults(data.projects || []);
                     break;
                 case 'activity':
-                    data = await activity.search(searchQuery);
+                    data = await activity.search(query);
                     setResults(data.activities || []);
                     break;
                 default:
@@ -43,6 +53,11 @@ function SearchPage() {
             setResults([]);
         }
         setLoading(false);
+    };
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        performSearch(searchQuery, searchType);
     };
 
     const handleUserClick = (username) => {

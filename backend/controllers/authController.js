@@ -2,11 +2,11 @@ import User from '../models/User.js';
 
 export async function register(req, res, userModel) {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, name, bio } = req.body;
 
         // Validation
-        if (!username || !email || !password) {
-            return res.status(400).json({ message: 'All fields are required' });
+        if (!username || !email || !password || !name) {
+            return res.status(400).json({ message: 'Username, email, password, and name are required' });
         }
 
         // Check if user exists
@@ -20,8 +20,14 @@ export async function register(req, res, userModel) {
             return res.status(400).json({ message: 'Username already taken' });
         }
 
-        // Create user
-        const user = await userModel.create({ username, email, password });
+        // Create user with all fields
+        const user = await userModel.create({ 
+            username, 
+            email, 
+            password, 
+            name,
+            bio: bio || '' // Optional field, default to empty string
+        });
         
         // Remove password from response
         delete user.password;
