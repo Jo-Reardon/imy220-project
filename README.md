@@ -1,8 +1,8 @@
 ![CodeVerse Banner](assets/banner.png)
 
-================================================================================
-                                OVERVIEW
-================================================================================
+--------------------------------------------------------------------------------
+## Overview
+--------------------------------------------------------------------------------
 
 CodeVerse is a **space-themed version control platform** for developers.  
 Create projects, check files in/out, track activity, and connect with others — all in a clean, interactive, full-stack interface.
@@ -47,3 +47,4 @@ Create projects, check files in/out, track activity, and connect with others —
 ================================================================================
 
 &copy; 2025 Jo Reardon. All rights reserved.
+
