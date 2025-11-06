@@ -1,49 +1,64 @@
 ![CodeVerse Banner](assets/banner.png)
 
---------------------------------------------------------------------------------
-## Overview
---------------------------------------------------------------------------------
+<div align="center">
+╭───────────────────────────────╮  
+│           Overview            │  
+╰───────────────────────────────╯
+</div>
 
 CodeVerse is a **space-themed version control platform** for developers.  
 Create projects, check files in/out, track activity, and connect with others — all in a clean, interactive, full-stack interface.
 
---------------------------------------------------------------------------------
-## Full Stack
---------------------------------------------------------------------------------
+<div align="center">
+╭───────────────────────────────╮  
+│          Full Stack           │  
+╰───────────────────────────────╯
+</div>
 
-[![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=white)](https://reactjs.org/)
-[![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Webpack](https://img.shields.io/badge/Webpack-8DD6F9?style=flat-square&logo=webpack&logoColor=black)](https://webpack.js.org/)
-[![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white)](https://www.figma.com/)
+### Frontend
+[![React](https://img.shields.io/badge/React-0D1B2A?style=for-the-badge&logo=react&logoColor=61DAFB)]
+[![Tailwind](https://img.shields.io/badge/Tailwind-1B263B?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC)]
+[![Figma](https://img.shields.io/badge/Figma-1B1B2B?style=for-the-badge&logo=figma&logoColor=F24E1E)]
 
---------------------------------------------------------------------------------
-## Highlights
---------------------------------------------------------------------------------
+### Backend
+[![Express](https://img.shields.io/badge/Express-2C0735?style=for-the-badge&logo=express&logoColor=FFFFFF)]
+[![MongoDB](https://img.shields.io/badge/MongoDB-4A235A?style=for-the-badge&logo=mongodb&logoColor=47A248)]
 
-- Project check-in/out with version tracking  
-- Local & global activity feeds  
-- User profiles & connections  
-- Responsive UI with Tailwind  
-- Reusable full-stack components  
+### Tools
+[![Docker](https://img.shields.io/badge/Docker-3B0A45?style=for-the-badge&logo=docker&logoColor=2496ED)]
+[![Webpack](https://img.shields.io/badge/Webpack-4B2D7F?style=for-the-badge&logo=webpack&logoColor=8DD6F9)]
 
---------------------------------------------------------------------------------
-## Previews
---------------------------------------------------------------------------------
+<div align="center">
+╭───────────────────────────────╮  
+│          Highlights           │  
+╰───────────────────────────────╯
+</div>
+
+· Project check-in/out with version tracking  
+· Local & global activity feeds  
+· User profiles & connections  
+· Responsive UI with Tailwind  
+· Reusable full-stack components  
+
+<div align="center">
+╭───────────────────────────────╮  
+│            Previews           │  
+╰───────────────────────────────╯
+</div>
+
+<div align="center">
 
 **Splash Page**  
-![Splash Page](assets/splash.png)  
+![Splash Page](assets/splash.png)
 
 **Home Page**  
-![Home Page](assets/home.png)  
+![Home Page](assets/home.png)
 
 **Profile Page**  
-![Profile Page](assets/profile.png)  
+![Profile Page](assets/profile.png)
 
---------------------------------------------------------------------------------
-## Copyright
---------------------------------------------------------------------------------
+</div>
 
-&copy; 2025 Jo Reardon. All rights reserved.
+<div align="center">
+© 2025 Jo Reardon. All rights reserved.
+</div>
