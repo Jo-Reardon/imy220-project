@@ -15,19 +15,19 @@ Create projects, check files in/out, track activity, and connect with others —
 ╰───────────────────────────────╯</br>
 
 
-[![React](https://img.shields.io/badge/React------------0D1B2A?style=for-the-badge&logo=react&logoColor=61DAFB)]()
+[![React](https://img.shields.io/badge/React-0D1B2A?style=for-the-badge&logo=react&logoColor=61DAFBWidth=40)]()
 
-[![Tailwind](https://img.shields.io/badge/Tailwind------------2E1F4F?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC)]()
+[![Tailwind](https://img.shields.io/badge/Tailwind-2E1F4F?style=for-the-badge&logo=tailwind-css&logoColor=38B2ACWidth=40)]()
 
-[![Figma](https://img.shields.io/badge/Figma------------3A1E6F?style=for-the-badge&logo=figma&logoColor=F24E1E)]()
+[![Figma](https://img.shields.io/badge/Figma-3A1E6F?style=for-the-badge&logo=figma&logoColor=F24E1EWidth=40)]()
 
-[![Express](https://img.shields.io/badge/Express------------4B2D7F?style=for-the-badge&logo=express&logoColor=FFFFFF)]()
+[![Express](https://img.shields.io/badge/Express-4B2D7F?style=for-the-badge&logo=express&logoColor=FFFFFFWidth=40)]()
 
-[![MongoDB](https://img.shields.io/badge/MongoDB------------5663BF?style=for-the-badge&logo=mongodb&logoColor=47A248)]()
+[![MongoDB](https://img.shields.io/badge/MongoDB-5663BF?style=for-the-badge&logo=mongodb&logoColor=47A248Width=40)]()
 
-[![Docker](https://img.shields.io/badge/Docker------------7281D6?style=for-the-badge&logo=docker&logoColor=2496ED)]()
+[![Docker](https://img.shields.io/badge/Docker-7281D6?style=for-the-badge&logo=docker&logoColor=2496EDWidth=40)]()
 
-[![Webpack](https://img.shields.io/badge/Webpack------------9B7CD3?style=for-the-badge&logo=webpack&logoColor=8DD6F9)]()
+[![Webpack](https://img.shields.io/badge/Webpack-9B7CD3?style=for-the-badge&logo=webpack&logoColor=8DD6F9Width=40)]()
 
 </div>
 <div align="center">
@@ -64,6 +64,7 @@ Create projects, check files in/out, track activity, and connect with others —
 <div align="center">
 © 2025 Jo Reardon. All rights reserved.
 </div>
+
 
 
 
