@@ -52,23 +52,18 @@ Create projects, check files in/out, track activity, and connect with others —
 
 ![Splash Page](assets/splash.png)
 **Splash Page**  
+
  
 ![Home Page](assets/home.png)
 **Home Page** 
+
 
 ![Profile Page](assets/profile.png)
 **Profile Page**  
 
 </div>
 
+---
 <div align="center">
 © 2025 Jo Reardon. All rights reserved.
 </div>
-
-
-
-
-
-
-
-
