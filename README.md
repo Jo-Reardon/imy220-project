@@ -34,13 +34,14 @@ Create projects, check files in/out, track activity, and connect with others —
 ╭───────────────────────────────╮</br>  
 │          Highlights           │</br>  
 ╰───────────────────────────────╯</br>
-</div>
+
 
 · Project check-in/out with version tracking  
 · Local & global activity feeds  
 · User profiles & connections  
 · Responsive UI with Tailwind  
 · Reusable full-stack components  
+</div>
 
 <div align="center">
 ╭───────────────────────────────╮</br>  
@@ -67,3 +68,4 @@ Create projects, check files in/out, track activity, and connect with others —
 <div align="center">
 © 2025 Jo Reardon. All rights reserved.
 </div>
+
