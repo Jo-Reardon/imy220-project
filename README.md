@@ -15,19 +15,13 @@ Create projects, check files in/out, track activity, and connect with others —
 ╰───────────────────────────────╯</br>
 
 
-[![React](https://img.shields.io/badge/React-0D1B2A?style=for-the-badge&logo=react&logoColor=61DAFBWidth=40)]()
-
-[![Tailwind](https://img.shields.io/badge/Tailwind-2E1F4F?style=for-the-badge&logo=tailwind-css&logoColor=38B2ACWidth=40)]()
-
-[![Figma](https://img.shields.io/badge/Figma-3A1E6F?style=for-the-badge&logo=figma&logoColor=F24E1EWidth=40)]()
-
-[![Express](https://img.shields.io/badge/Express-4B2D7F?style=for-the-badge&logo=express&logoColor=FFFFFFWidth=40)]()
-
-[![MongoDB](https://img.shields.io/badge/MongoDB-5663BF?style=for-the-badge&logo=mongodb&logoColor=47A248Width=40)]()
-
-[![Docker](https://img.shields.io/badge/Docker-7281D6?style=for-the-badge&logo=docker&logoColor=2496EDWidth=40)]()
-
-[![Webpack](https://img.shields.io/badge/Webpack-9B7CD3?style=for-the-badge&logo=webpack&logoColor=8DD6F9Width=40)]()
+[![React](https://img.shields.io/badge/React-FFFFFF?style=for-the-badge&logo=react&logoColor=61DAFB&logoWidth=50)]()
+[![Tailwind](https://img.shields.io/badge/Tailwind-FF6B81?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC&logoWidth=50)]()
+[![Figma](https://img.shields.io/badge/Figma-F7A63C?style=for-the-badge&logo=figma&logoColor=F24E1E&logoWidth=50)]()
+[![Express](https://img.shields.io/badge/Express-38B2AC?style=for-the-badge&logo=express&logoColor=FFFFFF&logoWidth=50)]()
+[![MongoDB](https://img.shields.io/badge/MongoDB-9B7CD3?style=for-the-badge&logo=mongodb&logoColor=47A248&logoWidth=50)]()
+[![Docker](https://img.shields.io/badge/Docker-7281D6?style=for-the-badge&logo=docker&logoColor=2496ED&logoWidth=50)]()
+[![Webpack](https://img.shields.io/badge/Webpack-0D1B2A?style=for-the-badge&logo=webpack&logoColor=8DD6F9&logoWidth=50)]()
 
 </div>
 <div align="center">
@@ -50,20 +44,21 @@ Create projects, check files in/out, track activity, and connect with others —
 
 <div align="center">
 
-**Splash Page**  
 ![Splash Page](assets/splash.png)
-
-**Home Page**  
+**Splash Page**  
+ 
 ![Home Page](assets/home.png)
+**Home Page** 
 
-**Profile Page**  
 ![Profile Page](assets/profile.png)
+**Profile Page**  
 
 </div>
 
 <div align="center">
 © 2025 Jo Reardon. All rights reserved.
 </div>
+
 
 
 
