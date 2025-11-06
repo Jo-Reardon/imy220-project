@@ -1,9 +1,9 @@
 ![CodeVerse Banner](assets/banner.png)
 
 <div align="center">
-╭───────────────────────────────╮  
-│           Overview            │  
-╰───────────────────────────────╯
+╭───────────────────────────────╮</br>  
+│           Overview            │</br>
+╰───────────────────────────────╯</br>
 </div>
 
 CodeVerse is a **space-themed version control platform** for developers.  
@@ -62,3 +62,4 @@ Create projects, check files in/out, track activity, and connect with others —
 <div align="center">
 © 2025 Jo Reardon. All rights reserved.
 </div>
+
