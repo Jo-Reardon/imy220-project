@@ -10,28 +10,26 @@ CodeVerse is a **space-themed version control platform** for developers.
 Create projects, check files in/out, track activity, and connect with others — all in a clean, interactive, full-stack interface.
 
 <div align="center">
-╭───────────────────────────────╮  
-│          Full Stack           │  
-╰───────────────────────────────╯
+╭───────────────────────────────╮</br>
+│          Full Stack           │</br>  
+╰───────────────────────────────╯</br>
 </div>
 
-### Frontend
 [![React](https://img.shields.io/badge/React-0D1B2A?style=for-the-badge&logo=react&logoColor=61DAFB)]
-[![Tailwind](https://img.shields.io/badge/Tailwind-1B263B?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC)]
-[![Figma](https://img.shields.io/badge/Figma-1B1B2B?style=for-the-badge&logo=figma&logoColor=F24E1E)]
-
-### Backend
-[![Express](https://img.shields.io/badge/Express-2C0735?style=for-the-badge&logo=express&logoColor=FFFFFF)]
-[![MongoDB](https://img.shields.io/badge/MongoDB-4A235A?style=for-the-badge&logo=mongodb&logoColor=47A248)]
-
-### Tools
-[![Docker](https://img.shields.io/badge/Docker-3B0A45?style=for-the-badge&logo=docker&logoColor=2496ED)]
-[![Webpack](https://img.shields.io/badge/Webpack-4B2D7F?style=for-the-badge&logo=webpack&logoColor=8DD6F9)]
+[![Tailwind](https://img.shields.io/badge/Tailwind-2E1F4F?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC)]
+[![Figma](https://img.shields.io/badge/Figma-3A1E6F?style=for-the-badge&logo=figma&logoColor=F24E1E)]
+[![Express](https://img.shields.io/badge/Express-4B2D7F?style=for-the-badge&logo=express&logoColor=FFFFFF)]
+[![MongoDB](https://img.shields.io/badge/MongoDB-5663BF?style=for-the-badge&logo=mongodb&logoColor=47A248)]
+[![Docker](https://img.shields.io/badge/Docker-7281D6?style=for-the-badge&logo=docker&logoColor=2496ED)]
+[![Webpack](https://img.shields.io/badge/Webpack-9B7CD3?style=for-the-badge&logo=webpack&logoColor=8DD6F9)]
+[![Node.js](https://img.shields.io/badge/Node.js-F7A63C?style=for-the-badge&logo=node.js&logoColor=339933)]
+[![NPM](https://img.shields.io/badge/NPM-F25C54?style=for-the-badge&logo=npm&logoColor=white)]
+[![GitHub](https://img.shields.io/badge/GitHub-FF6B81?style=for-the-badge&logo=github&logoColor=white)]
 
 <div align="center">
-╭───────────────────────────────╮  
-│          Highlights           │  
-╰───────────────────────────────╯
+╭───────────────────────────────╮</br>  
+│          Highlights           │</br>  
+╰───────────────────────────────╯</br>
 </div>
 
 · Project check-in/out with version tracking  
@@ -41,9 +39,9 @@ Create projects, check files in/out, track activity, and connect with others —
 · Reusable full-stack components  
 
 <div align="center">
-╭───────────────────────────────╮  
-│            Previews           │  
-╰───────────────────────────────╯
+╭───────────────────────────────╮</br>  
+│            Previews           │</br>  
+╰───────────────────────────────╯</br>
 </div>
 
 <div align="center">
@@ -62,4 +60,5 @@ Create projects, check files in/out, track activity, and connect with others —
 <div align="center">
 © 2025 Jo Reardon. All rights reserved.
 </div>
+
 
