@@ -13,23 +13,23 @@ Create projects, check files in/out, track activity, and connect with others —
 ╭───────────────────────────────╮</br>
 │          Full Stack           │</br>  
 ╰───────────────────────────────╯</br>
+
+
+[![React](https://img.shields.io/badge/React------------0D1B2A?style=for-the-badge&logo=react&logoColor=61DAFB)]()
+
+[![Tailwind](https://img.shields.io/badge/Tailwind------------2E1F4F?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC)]()
+
+[![Figma](https://img.shields.io/badge/Figma------------3A1E6F?style=for-the-badge&logo=figma&logoColor=F24E1E)]()
+
+[![Express](https://img.shields.io/badge/Express------------4B2D7F?style=for-the-badge&logo=express&logoColor=FFFFFF)]()
+
+[![MongoDB](https://img.shields.io/badge/MongoDB------------5663BF?style=for-the-badge&logo=mongodb&logoColor=47A248)]()
+
+[![Docker](https://img.shields.io/badge/Docker------------7281D6?style=for-the-badge&logo=docker&logoColor=2496ED)]()
+
+[![Webpack](https://img.shields.io/badge/Webpack------------9B7CD3?style=for-the-badge&logo=webpack&logoColor=8DD6F9)]()
+
 </div>
-
-[![React](https://img.shields.io/badge/React-0D1B2A?style=for-the-badge&logo=react&logoColor=61DAFB)]()
-
-[![Tailwind](https://img.shields.io/badge/Tailwind-2E1F4F?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC)]()
-
-[![Figma](https://img.shields.io/badge/Figma-3A1E6F?style=for-the-badge&logo=figma&logoColor=F24E1E)]()
-
-[![Express](https://img.shields.io/badge/Express-4B2D7F?style=for-the-badge&logo=express&logoColor=FFFFFF)]()
-
-[![MongoDB](https://img.shields.io/badge/MongoDB-5663BF?style=for-the-badge&logo=mongodb&logoColor=47A248)]()
-
-[![Docker](https://img.shields.io/badge/Docker-7281D6?style=for-the-badge&logo=docker&logoColor=2496ED)]()
-
-[![Webpack](https://img.shields.io/badge/Webpack-9B7CD3?style=for-the-badge&logo=webpack&logoColor=8DD6F9)]()
-
-
 <div align="center">
 ╭───────────────────────────────╮</br>  
 │          Highlights           │</br>  
@@ -64,6 +64,7 @@ Create projects, check files in/out, track activity, and connect with others —
 <div align="center">
 © 2025 Jo Reardon. All rights reserved.
 </div>
+
 
 
 
